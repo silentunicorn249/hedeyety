@@ -62,6 +62,7 @@ class AuthPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Login logic
+                Navigator.pushNamed(context, "/home");
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
