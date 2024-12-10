@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/pages/AuthPage.dart';
-import 'package:hedeyety/pages/HomePage.dart';
+import 'package:hedeyety/screens/events_screen.dart';
+import 'package:hedeyety/screens/gift_detail_screen.dart';
+import 'package:hedeyety/screens/gift_list_screen.dart';
+import 'package:hedeyety/screens/home_screen.dart';
+import 'package:hedeyety/screens/login_screen.dart';
+import 'package:hedeyety/screens/my_pledged_gift_screen.dart';
+import 'package:hedeyety/screens/welcome_screen.dart';
 
-import 'pages/EventList.dart';
-import 'pages/GiftDetails.dart';
-import 'pages/GiftList.dart';
-import 'pages/MyGift.dart';
-import 'pages/ProfilePage.dart';
+import 'routes.dart';
+import 'screens/profile_screen.dart';
+import 'screens/signup_screen.dart';
 
 void main() {
-  runApp(MaterialApp(
-    initialRoute: '/',
-    routes: {
-      '/': (context) => AuthPage(),
-      '/home': (context) => HomePage(),
-      '/events': (context) => EventListPage(),
-      '/gifts': (context) => GiftListPage(),
-      '/gift-details': (context) => GiftDetailsPage(),
-      '/profile': (context) => ProfilePage(),
-      '/pledged-gifts': (context) => PledgedGiftsPage(),
-    },
-  ));
+  runApp(HedieatyApp());
+}
+
+class HedieatyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: AppRoutes.welcome,
+      routes: {
+        AppRoutes.welcome: (context) => WelcomeScreen(),
+        AppRoutes.login: (context) => LoginScreen(),
+        AppRoutes.signup: (context) => SignupScreen(),
+        AppRoutes.home: (context) => HomePage(),
+        AppRoutes.events: (context) => EventListScreen(),
+        AppRoutes.profile: (context) => ProfileScreen(),
+        AppRoutes.giftDetails: (context) => GiftDetailsScreen(),
+        AppRoutes.gifts: (context) => GiftListScreen(),
+        AppRoutes.pledgedGifts: (context) => PledgedGiftsScreen(),
+      },
+    );
+  }
 }

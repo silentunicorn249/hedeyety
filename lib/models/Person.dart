@@ -1,16 +1,10 @@
+import 'Event.dart';
+
 class Person {
-  String name;
-  int events;
-  int age;
-  String biography;
+  final String name;
+  final String profileImage;
+  final List<Event> events;
 
-  // Constructor with default values for age and biography
-  Person(this.name, this.events,
-      {this.age = 3, this.biography = "No biography available."});
-
-  // Method
-  void introduce() {
-    print(
-        'Hello, my name is $name, I am $age years old, and here is my bio: $biography');
-  }
+  Person(
+      {required this.name, required this.profileImage, required this.events});
 }
