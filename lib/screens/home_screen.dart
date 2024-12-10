@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventListScreen(),
+                  builder: (context) => EventsListScreen(),
                 ),
               );
             },

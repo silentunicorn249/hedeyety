@@ -25,7 +25,7 @@ class HedieatyApp extends StatelessWidget {
         AppRoutes.login: (context) => LoginScreen(),
         AppRoutes.signup: (context) => SignupScreen(),
         AppRoutes.home: (context) => HomePage(),
-        AppRoutes.events: (context) => EventListScreen(),
+        AppRoutes.events: (context) => EventsListScreen(),
         AppRoutes.profile: (context) => ProfileScreen(),
         AppRoutes.giftDetails: (context) => GiftDetailsScreen(),
         AppRoutes.gifts: (context) => GiftListScreen(),
