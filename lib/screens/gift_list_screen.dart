@@ -1,72 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:hedeyety/models/dummy_data.dart';
+import 'package:hedeyety/screens/add_gift_Screen.dart';
 
 import '../models/Event.dart';
 import '../models/Gift.dart';
 import 'gift_detail_screen.dart';
 
 class GiftListScreen extends StatefulWidget {
-  late Event event;
+  Event event = dummyPersons[0].events[0];
 
   @override
   _GiftListScreenState createState() => _GiftListScreenState();
 }
 
 class _GiftListScreenState extends State<GiftListScreen> {
-  List<Gift> gifts = [];
+  List<Gift> gifts = dummyPersons[0].events[0].gifts;
 
   @override
   void initState() {
     super.initState();
-    gifts = widget.event.gifts;
-  }
-
-  void _addNewGift(String name, String description) {
-    setState(() {
-      gifts.add(Gift(name: name, description: description, category: 'Misc'));
-    });
-    Navigator.pop(context);
+    // gifts = widget.event.gifts;
+    print(gifts);
   }
 
   void _showAddGiftModal() {
-    String giftName = '';
-    String giftDescription = '';
-
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allow full-screen modal scroll
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: InputDecoration(labelText: 'Gift Name'),
-                  onChanged: (value) => giftName = value,
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Description'),
-                  onChanged: (value) => giftDescription = value,
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () => _addNewGift(giftName, giftDescription),
-                  child: Text('Add Gift'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      isScrollControlled: true,
+      builder: (BuildContext context) => SingleChildScrollView(
+          child: Container(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: AddGiftScreen(),
+      )),
     );
   }
 

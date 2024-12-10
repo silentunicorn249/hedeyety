@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hedeyety/models/dummy_data.dart';
 
 import '../models/Person.dart';
 
 class PledgedGiftsScreen extends StatelessWidget {
-  late Person person;
+  Person person = dummyPersons[0];
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late String password;
 
   void handleLogin() {
-    Navigator.pushNamed(context, AppRoutes.home);
+    Navigator.pushNamed(context, AppRoutes.homeStack);
   }
 
   @override
