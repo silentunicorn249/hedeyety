@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:hedeyety/models/Person.dart';
+// import 'package:hedeyety/models/user.dart';
 //
 // import 'BoringAvatars.dart';
 //

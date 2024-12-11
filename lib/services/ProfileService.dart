@@ -1,9 +1,9 @@
-import '../models/Person.dart';
 import '../models/event.dart';
+import '../models/user.dart';
 
 class ProfileService {
   // Dummy profile data
-  Person _dummyProfile = Person(
+  User _dummyProfile = User(
     id: '1',
     name: 'Mark Johnson',
     email: 'mark@example.com',
@@ -11,7 +11,7 @@ class ProfileService {
   );
 
   // Get the profile data
-  Person getProfile() {
+  User getProfile() {
     return _dummyProfile;
   }
 

@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hedeyety/models/dummy_data.dart';
 import 'package:hedeyety/screens/add_gift_Screen.dart';
 
-import '../models/Event.dart';
-import '../models/Gift.dart';
+import '../models/event.dart';
+import '../models/gift.dart';
 import 'gift_detail_screen.dart';
 
 class GiftListScreen extends StatefulWidget {
-  Event event = dummyPersons[0].events[0];
+  Event event = DummyData.events[0];
 
   @override
   _GiftListScreenState createState() => _GiftListScreenState();
 }
 
 class _GiftListScreenState extends State<GiftListScreen> {
-  List<Gift> gifts = dummyPersons[0].events[0].gifts;
+  List<Gift> gifts = DummyData.gifts;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _GiftListScreenState extends State<GiftListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.event.title} Gifts')),
+      appBar: AppBar(title: Text('${widget.event.name} Gifts')),
       body: ListView.builder(
         itemCount: gifts.length,
         itemBuilder: (context, index) {

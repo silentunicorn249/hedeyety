@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hedeyety/models/dummy_data.dart';
 
-import '../models/Gift.dart';
+import '../models/gift.dart';
 
 class GiftDetailsScreen extends StatefulWidget {
-  Gift gift = dummyPersons[0].events[0].gifts[1];
+  Gift gift = DummyData.gifts[0];
 
   @override
   _GiftDetailsScreenState createState() => _GiftDetailsScreenState();
@@ -16,7 +16,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    isPledged = widget.gift.isPledged;
+    isPledged = widget.gift.isPledged!;
     print(widget.gift);
   }
 

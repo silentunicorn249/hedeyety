@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hedeyety/screens/add_event_screen.dart';
 import 'package:hedeyety/screens/add_friend_screen.dart';
 
-import '../models/Person.dart';
 import '../models/dummy_data.dart';
+import '../models/user.dart';
 import 'events_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Person> persons = dummyPersons;
+  List<User> persons = DummyData.users;
 
   void addEventModal() {
     showModalBottomSheet(
@@ -62,10 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 final person = persons[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(person.profileImage),
-                  ),
+                      // backgroundImage: NetworkImage(person.profileImage),
+                      ),
                   title: Text(person.name),
-                  subtitle: Text('Events: ${person.events.length}'),
+                  subtitle: Text('Events: ${person.email}'),
                   onTap: () {
                     Navigator.push(
                       context,

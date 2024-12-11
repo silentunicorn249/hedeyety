@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../models/Event.dart';
-import '../models/Person.dart';
 import '../models/dummy_data.dart';
+import '../models/event.dart';
+import '../models/user.dart';
 import 'gift_list_screen.dart';
 
 class EventsListScreen extends StatefulWidget {
-  Person person = dummyPersons[0];
-
+  User person = DummyData.users[0];
   @override
   _EventListScreenState createState() => _EventListScreenState();
 }
@@ -18,7 +17,7 @@ class _EventListScreenState extends State<EventsListScreen> {
   @override
   void initState() {
     super.initState();
-    events = widget.person.events; // Initialize with person's events
+    events = DummyData.events; // Initialize with person's events
   }
 
   void _showAddEventModal() {}
@@ -32,7 +31,7 @@ class _EventListScreenState extends State<EventsListScreen> {
         itemBuilder: (context, index) {
           final event = events[index];
           return ListTile(
-            title: Text(event.title),
+            title: Text(event.name),
             subtitle: Text('Date: ${event.date.toLocal()}'),
             onTap: () => Navigator.push(
               context,

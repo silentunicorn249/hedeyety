@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hedeyety/models/dummy_data.dart';
 
-import '../models/Person.dart';
+import '../models/user.dart';
 
 class PledgedGiftsScreen extends StatelessWidget {
-  Person person = dummyPersons[0];
+  User person = DummyData.users[0];
 
   @override
   Widget build(BuildContext context) {
-    final pledgedGifts =
-        person.events.expand((e) => e.gifts).where((g) => g.isPledged).toList();
+    final pledgedGifts = DummyData.gifts;
 
     return Scaffold(
       appBar: AppBar(title: Text('My Pledged Gifts')),
