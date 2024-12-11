@@ -17,21 +17,21 @@ class Repository {
 
   StorageService get storageService => _storageService;
 
-  Future<void> saveUser(User user) async {
+  Future<void> saveUser(UserModel user) async {
     await _storageService.save('users', user.id, user.toJson());
   }
 
-  Future<User?> getUser(String id) async {
+  Future<UserModel?> getUser(String id) async {
     final data = await _storageService.fetch('users', id);
-    return data != null ? User.fromJson(data) : null;
+    return data != null ? UserModel.fromJson(data) : null;
   }
 
   Future<void> deleteUser(String id) async {
     await _storageService.delete('users', id);
   }
 
-  Future<List<User>> getAllUsers() async {
+  Future<List<UserModel>> getAllUsers() async {
     final data = await _storageService.fetchAll('users');
-    return data.map((item) => User.fromJson(item)).toList();
+    return data.map((item) => UserModel.fromJson(item)).toList();
   }
 }

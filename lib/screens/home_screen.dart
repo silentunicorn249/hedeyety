@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedeyety/routes.dart';
 import 'package:hedeyety/screens/add_event_screen.dart';
 import 'package:hedeyety/screens/add_friend_screen.dart';
 
@@ -12,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<User> persons = DummyData.users;
+  List<UserModel> persons = DummyData.users;
 
   void addEventModal() {
     showModalBottomSheet(
@@ -40,6 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void handleLogout() {
+    FirebaseAuth.instance.signOut();
+    Navigator.popAndPushNamed(context, AppRoutes.welcome);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Icon(Icons.add), onPressed: addFriendModal),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        leading: MaterialButton(
+          onPressed: handleLogout,
+          child: Icon(Icons.arrow_back_sharp),
+        ),
         title: Text('Friends List'),
       ),
       body: Column(

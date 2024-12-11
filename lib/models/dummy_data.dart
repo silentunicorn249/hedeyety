@@ -5,20 +5,20 @@ import 'pledge.dart';
 import 'user.dart';
 
 class DummyData {
-  static List<User> users = [
-    User(
+  static List<UserModel> users = [
+    UserModel(
       id: 1,
       name: 'Alice',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
     ),
-    User(
+    UserModel(
       id: 2,
       name: 'Alice2',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
     ),
-    User(
+    UserModel(
       id: 3,
       name: 'Alice3',
       email: 'alice@example.com',

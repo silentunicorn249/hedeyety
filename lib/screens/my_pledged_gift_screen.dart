@@ -4,7 +4,7 @@ import 'package:hedeyety/models/dummy_data.dart';
 import '../models/user.dart';
 
 class PledgedGiftsScreen extends StatelessWidget {
-  User person = DummyData.users[0];
+  UserModel person = DummyData.users[0];
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:hedeyety/screens/welcome_screen.dart';
@@ -21,11 +23,36 @@ void main() async {
   final sqfliteService = SqfliteService();
   await sqfliteService.initialize('my_database.db');
   await repository.initialize(sqfliteService);
+  Firebase.initializeApp();
 
   runApp(HedieatyApp());
 }
 
-class HedieatyApp extends StatelessWidget {
+class HedieatyApp extends StatefulWidget {
+  @override
+  _HedieatyAppState createState() => _HedieatyAppState();
+}
+
+class _HedieatyAppState extends State<HedieatyApp> {
+  String initialRoute = AppRoutes.welcome; // Default to welcome screen
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserLoginStatus();
+  }
+
+  // Function to check if the user is logged in
+  Future<void> _checkUserLoginStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    // print(user);
+    setState(() {
+      if (user != null) {
+        initialRoute = AppRoutes.homeStack;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -41,7 +68,7 @@ class HedieatyApp extends StatelessWidget {
 
           return MaterialApp(
             theme: themeProvider.currentTheme, // Set the theme dynamically
-            initialRoute: AppRoutes.welcome,
+            initialRoute: initialRoute,
             routes: {
               AppRoutes.welcome: (context) => WelcomeScreen(),
               AppRoutes.login: (context) => LoginScreen(),

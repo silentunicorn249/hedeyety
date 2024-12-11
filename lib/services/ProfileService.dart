@@ -3,7 +3,7 @@ import '../models/user.dart';
 
 class ProfileService {
   // Dummy profile data
-  User _dummyProfile = User(
+  UserModel _dummyProfile = UserModel(
     id: '1',
     name: 'Mark Johnson',
     email: 'mark@example.com',
@@ -11,7 +11,7 @@ class ProfileService {
   );
 
   // Get the profile data
-  User getProfile() {
+  UserModel getProfile() {
     return _dummyProfile;
   }
 

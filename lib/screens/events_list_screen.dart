@@ -6,7 +6,7 @@ import '../models/user.dart';
 import 'gift_list_screen.dart';
 
 class EventsListScreen extends StatefulWidget {
-  User person = DummyData.users[0];
+  UserModel person = DummyData.users[0];
   @override
   _EventListScreenState createState() => _EventListScreenState();
 }
