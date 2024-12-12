@@ -1,5 +1,5 @@
-import '../models/event.dart';
-import '../models/gift.dart';
+import '../features/events/domain/entities/event.dart';
+import '../features/gifts/domain/entities/gift.dart';
 
 class EventService {
   List<Event> _dummyEvents = [

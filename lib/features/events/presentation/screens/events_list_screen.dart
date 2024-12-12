@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/dummy_data.dart';
-import '../models/event.dart';
-import '../models/user.dart';
-import 'gift_list_screen.dart';
+import '../../../../core/constants/dummy_data.dart';
+import '../../../auth/domain/entities/user.dart';
+import '../../../gifts/presentation/screens/gift_list_screen.dart';
+import '../../domain/entities/event.dart';
 
 class EventsListScreen extends StatefulWidget {
   UserModel person = DummyData.users[0];

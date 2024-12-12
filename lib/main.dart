@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:hedeyety/providers/ThemeProvider.dart';
-import 'package:hedeyety/screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'routes.dart';
-import 'screens/events_list_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/home_stack.dart';
-import 'screens/login_screen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/signup_screen.dart';
+import 'core/routes/routes.dart';
+import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/auth/presentation/screens/signup_screen.dart';
+import 'features/events/presentation/screens/events_list_screen.dart';
+import 'features/profile/presentation/screens/home_screen.dart';
+import 'features/profile/presentation/screens/home_stack.dart';
+import 'features/profile/presentation/screens/profile_screen.dart';
 import 'services/local_storage.dart';
 import 'services/repository.dart';
 

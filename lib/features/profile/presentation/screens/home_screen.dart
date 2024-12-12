@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedeyety/routes.dart';
-import 'package:hedeyety/screens/add_event_screen.dart';
-import 'package:hedeyety/screens/add_friend_screen.dart';
+import 'package:hedeyety/core/routes/routes.dart';
+import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
+import 'package:hedeyety/features/profile/presentation/screens/add_friend_screen.dart';
 
-import '../models/dummy_data.dart';
-import '../models/user.dart';
-import 'events_list_screen.dart';
+import '../../../../core/constants/dummy_data.dart';
+import '../../../auth/domain/entities/user.dart';
+import '../../../events/presentation/screens/events_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

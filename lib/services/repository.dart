@@ -1,5 +1,5 @@
-import '../models/storage_interface.dart';
-import '../models/user.dart';
+import '../features/auth/domain/entities/user.dart';
+import 'storage_interface.dart';
 
 class Repository {
   static final Repository _instance = Repository._internal();

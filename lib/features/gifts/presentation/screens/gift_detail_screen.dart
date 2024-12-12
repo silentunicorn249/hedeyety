@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/models/dummy_data.dart';
+import 'package:hedeyety/core/constants/dummy_data.dart';
 
-import '../models/gift.dart';
+import '../../domain/entities/gift.dart';
 
 class GiftDetailsScreen extends StatefulWidget {
   Gift gift = DummyData.gifts[0];

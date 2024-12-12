@@ -1,5 +1,5 @@
-import '../models/event.dart';
-import '../models/user.dart';
+import '../features/auth/domain/entities/user.dart';
+import '../features/events/domain/entities/event.dart';
 
 class ProfileService {
   // Dummy profile data

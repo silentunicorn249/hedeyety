@@ -1,4 +1,4 @@
-import '../models/gift.dart';
+import '../features/gifts/domain/entities/gift.dart';
 
 class GiftService {
   List<Gift> _dummyGifts = [

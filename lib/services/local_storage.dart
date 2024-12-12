@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../models/storage_interface.dart';
+import 'storage_interface.dart';
 
 class SqfliteService implements StorageService {
   static final SqfliteService _instance = SqfliteService._internal();

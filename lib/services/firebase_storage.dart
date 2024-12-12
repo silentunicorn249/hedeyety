@@ -1,3 +1,5 @@
+import 'storage_interface.dart';
+
 class FirebaseService implements StorageService {
   static final FirebaseService _instance = FirebaseService._internal();
 

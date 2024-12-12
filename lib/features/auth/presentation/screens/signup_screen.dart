@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-import '../components/main_button.dart';
-import '../routes.dart';
+import '../../../../core/routes/routes.dart';
+import '../widgets/main_button.dart';
 
 class SignupScreen extends StatefulWidget {
   static String id = "register_screen";

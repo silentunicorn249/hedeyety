@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/components/main_button.dart';
+import 'package:hedeyety/features/auth/presentation/widgets/main_button.dart';
 
-import '../routes.dart';
+import '../../../../core/routes/routes.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override

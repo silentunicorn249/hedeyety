@@ -1,8 +1,8 @@
-import 'event.dart';
-import 'gift.dart';
-import 'notification.dart';
-import 'pledge.dart';
-import 'user.dart';
+import '../../features/auth/domain/entities/user.dart';
+import '../../features/events/domain/entities/event.dart';
+import '../../features/gifts/domain/entities/gift.dart';
+import '../../features/gifts/domain/entities/pledge.dart';
+import '../../features/profile/domain/entities/notification.dart';
 
 class DummyData {
   static List<UserModel> users = [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/models/dummy_data.dart';
-import 'package:hedeyety/screens/add_gift_Screen.dart';
+import 'package:hedeyety/core/constants/dummy_data.dart';
+import 'package:hedeyety/features/gifts/presentation/screens/add_gift_Screen.dart';
 
-import '../models/event.dart';
-import '../models/gift.dart';
+import '../../../events/domain/entities/event.dart';
+import '../../domain/entities/gift.dart';
 import 'gift_detail_screen.dart';
 
 class GiftListScreen extends StatefulWidget {
