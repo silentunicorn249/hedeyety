@@ -37,7 +37,7 @@ class AddFriendScreen extends StatelessWidget {
               MaterialButton(
                 color: Colors.lightBlueAccent,
                 onPressed: () async {
-                  final repo = await UserRepoLocal.create();
+                  final repo = await UserRepoLocal();
                   await repo.saveUser(UserModel(
                       id: "u1",
                       name: friendName,

@@ -7,8 +7,6 @@ import 'package:hedeyety/features/events/presentation/screens/add_event_screen.d
 import 'package:hedeyety/features/events/presentation/screens/events_list_screen.dart';
 import 'package:hedeyety/features/profile/presentation/screens/add_friend_screen.dart';
 
-import '../../../auth/data/models/user_model.dart';
-
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,18 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<UserEntity>>
       _profilesFuture; // Declare a future for profiles
 
-  // This method will fetch profiles asynchronously
   Future<List<UserEntity>> getProfiles() async {
-    final us =
-        UserModel(id: "u1", name: "Mark2", email: "awMail", preferences: {});
-    print(us.toJson());
-    // Simulate fetching data (this should be your actual data-fetching logic)
-    final repo = await UserRepoLocal.create();
+    final repo = UserRepoLocal();
     final res = await repo.getALlUsers();
-    print("returned");
-    print(res);
-
-    // Fetch data (replace with actual data fetching logic)
     return res;
   }
 

@@ -4,20 +4,18 @@ import 'package:sqflite/sqflite.dart';
 import '../models/user_model.dart';
 
 class UserRepoLocal implements UserRepository {
+  static final UserRepoLocal _instance = UserRepoLocal._();
   late Database _db;
   final String DB_NAME = "users";
 
   UserRepoLocal._();
 
-  static Future<UserRepoLocal> create() async {
-    UserRepoLocal repo = UserRepoLocal._();
-    await repo.initialize("my_db");
-    return repo;
-  }
+  factory UserRepoLocal() => _instance;
 
-  @override
+  // Ensure database is initialized only once
   Future<void> initialize(String dbPath) async {
-    print("Initializing");
+    if (_db != null) return; // Prevent re-initializing
+    print("Initializing database...");
     _db = await openDatabase(
       dbPath,
       version: 1,
@@ -32,7 +30,7 @@ class UserRepoLocal implements UserRepository {
             'CREATE TABLE friends (userId TEXT, friendId TEXT, PRIMARY KEY (userId, friendId))');
       },
     );
-    print(_db);
+    print("Database initialized: $_db");
   }
 
   @override
@@ -43,11 +41,7 @@ class UserRepoLocal implements UserRepository {
   @override
   Future<List<UserModel>> getALlUsers() async {
     final result = await _db.query(DB_NAME);
-    print("Got");
-    print(result);
     final objs = result.map((map) => UserModel.fromJson(map)).toList();
-    print("objs");
-    print(objs);
     return objs;
   }
 

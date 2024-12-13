@@ -17,13 +17,8 @@ import 'features/profile/presentation/screens/profile_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize your repository and storage services (as you have in your code)
-
-  final userRepo = await UserRepoLocal.create();
-  var res = await userRepo.getALlUsers();
-  print("Resultsss");
-  print(res);
-  print("end of Resultsss");
+  final userRepo = UserRepoLocal();
+  await userRepo.initialize("my_db");
   await Firebase.initializeApp();
 
   runApp(HedieatyApp());
