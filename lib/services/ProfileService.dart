@@ -3,7 +3,7 @@ import '../features/events/domain/entities/event.dart';
 
 class ProfileService {
   // Dummy profile data
-  UserModel _dummyProfile = UserModel(
+  UserEntity _dummyProfile = UserEntity(
     id: '1',
     name: 'Mark Johnson',
     email: 'mark@example.com',
@@ -11,7 +11,7 @@ class ProfileService {
   );
 
   // Get the profile data
-  UserModel getProfile() {
+  UserEntity getProfile() {
     return _dummyProfile;
   }
 

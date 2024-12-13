@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
 import 'package:hedeyety/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:provider/provider.dart';
@@ -12,18 +13,18 @@ import 'features/events/presentation/screens/events_list_screen.dart';
 import 'features/profile/presentation/screens/home_screen.dart';
 import 'features/profile/presentation/screens/home_stack.dart';
 import 'features/profile/presentation/screens/profile_screen.dart';
-import 'services/local_storage.dart';
-import 'services/repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize your repository and storage services (as you have in your code)
-  final repository = Repository();
-  final sqfliteService = SqfliteService();
-  await sqfliteService.initialize('my_database.db');
-  await repository.initialize(sqfliteService);
-  Firebase.initializeApp();
+
+  final userRepo = await UserRepoLocal.create();
+  var res = await userRepo.getALlUsers();
+  print("Resultsss");
+  print(res);
+  print("end of Resultsss");
+  await Firebase.initializeApp();
 
   runApp(HedieatyApp());
 }

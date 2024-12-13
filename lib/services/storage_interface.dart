@@ -1,5 +1,5 @@
 abstract class StorageService {
-  Future<void> save(String collection, int id, Map<String, dynamic> data);
+  Future<void> save(String collection, String id, Map<String, dynamic> data);
 
   Future<Map<String, dynamic>?> fetch(String collection, String id);
 

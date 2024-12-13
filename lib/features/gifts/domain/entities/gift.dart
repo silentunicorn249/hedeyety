@@ -1,5 +1,5 @@
 class Gift {
-  int? id;
+  String id;
   String name;
   String description;
   String? category;
@@ -8,7 +8,7 @@ class Gift {
   int eventId;
 
   Gift({
-    this.id,
+    required this.id,
     required this.name,
     required this.description,
     this.category,

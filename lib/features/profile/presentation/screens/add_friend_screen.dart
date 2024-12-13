@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
+
+import '../../../auth/data/models/user_model.dart';
 
 class AddFriendScreen extends StatelessWidget {
   String friendName = "";
@@ -7,7 +10,7 @@ class AddFriendScreen extends StatelessWidget {
     return Container(
       color: Color(0xff757575),
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(30),
@@ -15,11 +18,11 @@ class AddFriendScreen extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(25.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              const Text(
                 "Add Friend",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, color: Colors.lightBlueAccent),
@@ -33,10 +36,16 @@ class AddFriendScreen extends StatelessWidget {
               ),
               MaterialButton(
                 color: Colors.lightBlueAccent,
-                onPressed: () {
+                onPressed: () async {
+                  final repo = await UserRepoLocal.create();
+                  await repo.saveUser(UserModel(
+                      id: "u1",
+                      name: friendName,
+                      email: "awMail",
+                      preferences: {}));
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   "Add",
                   style: TextStyle(color: Colors.white),
                 ),

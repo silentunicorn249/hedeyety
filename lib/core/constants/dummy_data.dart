@@ -7,19 +7,21 @@ import '../../features/profile/domain/entities/notification.dart';
 class DummyData {
   static List<UserModel> users = [
     UserModel(
-      id: 1,
+  static List<UserEntity> users = [
+    UserEntity(
+      id: "u1",
       name: 'Alice',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
     ),
-    UserModel(
-      id: 2,
+    UserEntity(
+      id: "u2",
       name: 'Alice2',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
     ),
-    UserModel(
-      id: 3,
+    UserEntity(
+      id: "u3",
       name: 'Alice3',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
@@ -55,7 +57,7 @@ class DummyData {
 
   static List<Gift> gifts = [
     Gift(
-      id: 3,
+      id: "g3",
       name: 'Smartphone',
       description: 'Latest model',
       category: 'Electronics',
@@ -64,7 +66,7 @@ class DummyData {
       eventId: 1,
     ),
     Gift(
-      id: 3,
+      id: "g3",
       name: 'Smartphone',
       description: 'Latest model',
       category: 'Electronics',

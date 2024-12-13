@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'storage_interface.dart';
 
 class FirebaseService implements StorageService {

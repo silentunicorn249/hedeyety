@@ -38,7 +38,7 @@ class _HomeStackState extends State<HomeStack> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
-            label: 'Events',
+            label: 'Pledged Gifts',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

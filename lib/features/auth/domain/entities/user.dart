@@ -1,25 +1,13 @@
-class UserModel {
-  int id;
+class UserEntity {
+  String id;
   String name;
   String email;
-  Map<String, dynamic> preferences;
+  Map<String, String> preferences;
+  String? profileImage;
 
-  UserModel(
+  UserEntity(
       {required this.id,
       required this.name,
       required this.email,
       required this.preferences});
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'email': email,
-        'preferences': preferences.toString(),
-      };
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json['id'],
-        name: json['name'],
-        email: json['email'],
-        preferences: Map<String, dynamic>.from(json['preferences']),
-      );
 }

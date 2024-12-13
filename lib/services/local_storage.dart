@@ -30,7 +30,7 @@ class SqfliteService implements StorageService {
 
   @override
   Future<void> save(
-      String collection, int id, Map<String, dynamic> data) async {
+      String collection, String id, Map<String, dynamic> data) async {
     await _db.insert(collection, data,
         conflictAlgorithm: ConflictAlgorithm.replace);
   }

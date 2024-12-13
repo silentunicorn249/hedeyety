@@ -1,7 +1,7 @@
 import '../features/auth/domain/entities/user.dart';
 import 'storage_interface.dart';
 
-class Repository {
+class Repositoryy {
   static final Repository _instance = Repository._internal();
 
   late final StorageService _storageService;
@@ -17,21 +17,21 @@ class Repository {
 
   StorageService get storageService => _storageService;
 
-  Future<void> saveUser(UserModel user) async {
+  Future<void> saveUser(UserEntity user) async {
     await _storageService.save('users', user.id, user.toJson());
   }
 
-  Future<UserModel?> getUser(String id) async {
+  Future<UserEntity?> getUser(String id) async {
     final data = await _storageService.fetch('users', id);
-    return data != null ? UserModel.fromJson(data) : null;
+    return data != null ? UserEntity.fromJson(data) : null;
   }
 
   Future<void> deleteUser(String id) async {
     await _storageService.delete('users', id);
   }
 
-  Future<List<UserModel>> getAllUsers() async {
+  Future<List<UserEntity>> getAllUsers() async {
     final data = await _storageService.fetchAll('users');
-    return data.map((item) => UserModel.fromJson(item)).toList();
+    return data.map((item) => UserEntity.fromJson(item)).toList();
   }
 }

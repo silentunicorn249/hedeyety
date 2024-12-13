@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/core/routes/routes.dart';
+import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
+import 'package:hedeyety/features/auth/domain/entities/user.dart'; // Ensure this import exists
 import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
+import 'package:hedeyety/features/events/presentation/screens/events_list_screen.dart';
 import 'package:hedeyety/features/profile/presentation/screens/add_friend_screen.dart';
 
-import '../../../../core/constants/dummy_data.dart';
-import '../../../auth/domain/entities/user.dart';
-import '../../../events/presentation/screens/events_list_screen.dart';
+import '../../../auth/data/models/user_model.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,18 +15,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<UserModel> persons = DummyData.users;
+  late Future<List<UserEntity>>
+      _profilesFuture; // Declare a future for profiles
+
+  // This method will fetch profiles asynchronously
+  Future<List<UserEntity>> getProfiles() async {
+    final us =
+        UserModel(id: "u1", name: "Mark2", email: "awMail", preferences: {});
+    print(us.toJson());
+    // Simulate fetching data (this should be your actual data-fetching logic)
+    final repo = await UserRepoLocal.create();
+    final res = await repo.getALlUsers();
+    print("returned");
+    print(res);
+
+    // Fetch data (replace with actual data fetching logic)
+    return res;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _profilesFuture = getProfiles(); // Initialize the future to load profiles
+  }
 
   void addEventModal() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) => SingleChildScrollView(
-          child: Container(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: AddEventScreen(),
-      )),
+        child: Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: AddEventScreen(),
+        ),
+      ),
     );
   }
 
@@ -34,11 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) => SingleChildScrollView(
-          child: Container(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: AddFriendScreen(),
-      )),
+        child: Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: AddFriendScreen(),
+        ),
+      ),
     );
   }
 
@@ -50,39 +75,78 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add), onPressed: addFriendModal),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // do something
+            },
+          ),
+        ],
         leading: MaterialButton(
           onPressed: handleLogout,
-          child: Icon(Icons.arrow_back_sharp),
+          child: const Icon(Icons.logout_outlined),
         ),
-        title: Text('Friends List'),
+        title: const Text('Friends List'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: addFriendModal,
+        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
           MaterialButton(
             onPressed: addEventModal,
-            child: Text("Add Friend"),
+            child: const Text("Add Event"),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: persons.length,
-              itemBuilder: (context, index) {
-                final person = persons[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                      // backgroundImage: NetworkImage(person.profileImage),
-                      ),
-                  title: Text(person.name),
-                  subtitle: Text('Events: ${person.email}'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EventsListScreen(),
-                      ),
+            child: FutureBuilder<List<UserEntity>>(
+              future: _profilesFuture, // Future for profiles
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                      child:
+                          CircularProgressIndicator()); // Show loading indicator
+                }
+
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Center(
+                      child: Text(
+                          'Error: ${snapshot.error}')); // Show error if any
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                      child: Text('No profiles available')); // Show if no data
+                }
+
+                // Data has been fetched successfully
+                List<UserEntity> persons = snapshot.data!;
+
+                return ListView.builder(
+                  itemCount: persons.length,
+                  itemBuilder: (context, index) {
+                    final person = persons[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                          // backgroundImage: NetworkImage(person.profileImage), // Use the profile image URL
+                          ),
+                      title: Text(person.name),
+                      subtitle: Text('Email: ${person.email}'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EventsListScreen(),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
