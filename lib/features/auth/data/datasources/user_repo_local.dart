@@ -14,22 +14,27 @@ class UserRepoLocal implements UserRepository {
 
   factory UserRepoLocal() => _instance;
 
+  Future<void> initCommands(Database db) async {
+    print("Creating tables");
+    db.execute(
+        'CREATE TABLE users (id TEXT PRIMARY KEY, name TEXT, phoneNo TEXT, email TEXT, preferences TEXT)');
+    db.execute(
+        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, userId TEXT)');
+    db.execute(
+        'CREATE TABLE gifts (id TEXT PRIMARY KEY, name TEXT, description TEXT, category TEXT, price REAL, status TEXT, eventId TEXT)');
+    db.execute(
+        'CREATE TABLE friends (userId TEXT, friendId TEXT, PRIMARY KEY (userId, friendId))');
+  }
+
   // Ensure database is initialized only once
   Future<void> initialize(String dbPath) async {
     print("Called");
     print("Initializing database $dbPath...");
     _db = await openDatabase(
-      join(await getDatabasesPath(), dbPath),
+      join(await getDatabasesPath(), "local_db"),
       version: 1,
       onCreate: (db, version) {
-        db.execute(
-            'CREATE TABLE users (id TEXT PRIMARY KEY, name TEXT, email TEXT, preferences TEXT)');
-        db.execute(
-            'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, userId TEXT)');
-        db.execute(
-            'CREATE TABLE gifts (id TEXT PRIMARY KEY, name TEXT, description TEXT, category TEXT, price REAL, status TEXT, eventId TEXT)');
-        db.execute(
-            'CREATE TABLE friends (userId TEXT, friendId TEXT, PRIMARY KEY (userId, friendId))');
+        initCommands(db);
       },
     );
     print("Database initialized: $_db");
@@ -49,10 +54,10 @@ class UserRepoLocal implements UserRepository {
   }
 
   @override
-  Future<Map<String, dynamic>?> getUser(String id) async {
+  Future<UserModel?> getUser(String id) async {
     final result =
         await _db.query(USER_TABLE_NAME, where: 'id = ?', whereArgs: [id]);
-    return result.isNotEmpty ? result.first : null;
+    return result.isNotEmpty ? UserModel.fromJson(result.first) : null;
   }
 
   @override
@@ -68,10 +73,9 @@ class UserRepoLocal implements UserRepository {
     await _db.execute('DROP TABLE IF EXISTS events');
     await _db.execute('DROP TABLE IF EXISTS gifts');
     await _db.execute('DROP TABLE IF EXISTS friends');
-
     print("Deleted old DBs");
 
     // Recreate the tables
-    await initialize(DB_PATH);
+    await initCommands(_db);
   }
 }

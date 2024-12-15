@@ -5,26 +5,27 @@ import '../../features/gifts/domain/entities/pledge.dart';
 import '../../features/profile/domain/entities/notification.dart';
 
 class DummyData {
-  static List<UserModel> users = [
-    UserModel(
   static List<UserEntity> users = [
     UserEntity(
       id: "u1",
       name: 'Alice',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
+      phoneNo: '',
     ),
     UserEntity(
       id: "u2",
       name: 'Alice2',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
+      phoneNo: '',
     ),
     UserEntity(
       id: "u3",
       name: 'Alice3',
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
+      phoneNo: '',
     ),
   ];
 

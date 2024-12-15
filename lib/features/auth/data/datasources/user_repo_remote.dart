@@ -26,15 +26,18 @@ class UserRepoRemote implements UserRepository {
   }
 
   @override
-  Future<Map<String, dynamic>?> getUser(String id) async {
+  Future<UserModel?> getUser(String id) async {
     try {
+      print("Fetchig");
       // Fetch the user data from Firestore by user ID
       DocumentSnapshot snapshot =
           await _firestore.collection('users').doc(id).get();
 
       // If the document exists, return its data
       if (snapshot.exists) {
-        return snapshot.data() as Map<String, dynamic>;
+        var userDoc = snapshot.data();
+        print(userDoc);
+        return UserModel.fromJson(userDoc as Map<String, dynamic>);
       } else {
         // If the user is not found, return null
         return null;

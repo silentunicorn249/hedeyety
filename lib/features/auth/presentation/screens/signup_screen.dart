@@ -21,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   late String email;
   late String name;
   late String password;
+  late String phoneNo;
 
   void handleSignup() async {
     print("Email $email, password: $password");
@@ -33,12 +34,13 @@ class _SignupScreenState extends State<SignupScreen> {
       final custUser = UserModel(
         id: newUser.user!.uid,
         name: name,
+        phoneNo: phoneNo,
         email: email,
         preferences: {},
       );
       await _firestore
           .collection('users')
-          .doc(custUser.id)
+          .doc(custUser.phoneNo)
           .set(custUser.toJson());
       Navigator.pushNamed(context, AppRoutes.homeStack);
       setState(() {
@@ -124,6 +126,36 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter your name',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black),
+                onChanged: (value) {
+                  //Do something with the user input.
+                  phoneNo = value;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Enter your phonrNo',
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
