@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 
 import 'core/routes/routes.dart';
 import 'features/auth/data/datasources/user_repo_local.dart';
-import 'features/auth/presentation/providers/profile_provider.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/signup_screen.dart';
+import 'features/events/presentation/providers/friends_provider.dart';
 import 'features/profile/presentation/screens/home_screen.dart';
 import 'features/profile/presentation/screens/home_stack.dart';
 import 'features/profile/presentation/screens/profile_screen.dart';
@@ -38,7 +38,6 @@ class _HedieatyAppState extends State<HedieatyApp> {
     _checkUserLoginStatus();
   }
 
-  // Function to check if the user is logged in
   Future<void> _checkUserLoginStatus() async {
     User? user = FirebaseAuth.instance.currentUser;
     // print(user);
@@ -57,7 +56,7 @@ class _HedieatyAppState extends State<HedieatyApp> {
           create: (context) => ThemeProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ProfileProvider(),
+          create: (_) => FriendsProvider(),
         ),
       ],
       child: Builder(

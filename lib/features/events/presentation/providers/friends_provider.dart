@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/auth/data/models/user_model.dart';
 
-import '../../data/datasources/user_repo_local.dart';
-import '../../domain/entities/user.dart';
+import '../../../auth/data/datasources/user_repo_local.dart';
+import '../../../auth/domain/entities/user.dart';
 
-class ProfileProvider with ChangeNotifier {
+class FriendsProvider with ChangeNotifier {
   List<UserEntity> _profiles = [];
   bool _isLoading = false;
   bool _isInitialized = false; // Prevent multiple fetch calls
@@ -12,10 +12,11 @@ class ProfileProvider with ChangeNotifier {
   final UserRepoLocal _repo = UserRepoLocal(); // Local repository instance
 
   List<UserEntity> get profiles => _profiles;
+
   bool get isLoading => _isLoading;
 
   // Constructor to initialize profiles
-  ProfileProvider() {
+  FriendsProvider() {
     initializeProfiles(); // Trigger data fetching
   }
 
@@ -28,7 +29,9 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
 
     try {
+      debugPrint("ProfileProvider fetch");
       _profiles = await _repo.getALlUsers();
+      print(profiles);
     } catch (e) {
       // Handle errors, optionally log them
       debugPrint('Error fetching profiles: $e');

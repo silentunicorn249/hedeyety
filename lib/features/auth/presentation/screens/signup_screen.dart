@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
       );
       await _firestore
           .collection('users')
-          .doc(custUser.phoneNo)
+          .doc(custUser.id)
           .set(custUser.toJson());
       Navigator.pushNamed(context, AppRoutes.homeStack);
       setState(() {

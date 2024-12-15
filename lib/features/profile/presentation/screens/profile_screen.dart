@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/auth/data/datasources/user_repo_remote.dart';
+import 'package:hedeyety/features/auth/data/models/user_model.dart';
 import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -9,20 +11,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late SharedPreferences pref;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
-    _loadTheme();
+    _loadProfile();
   }
 
   // Load the saved theme from SharedPreferences and set it in the ThemeProvider
-  Future<void> _loadTheme() async {
-    pref = await SharedPreferences.getInstance();
-    bool isDark = pref.getInt("theme") == 1;
-
-    // Set the initial theme in the ThemeProvider
+  Future<UserModel?> _loadProfile() async {
+    final repo = UserRepoRemote();
+    return await repo.getUser(_auth.currentUser!.uid);
   }
 
   @override
@@ -32,37 +32,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text('My Profile'),
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        children: [
-          const CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage('images/logo.jpg'),
-          ),
-          ListTile(
-            title: const Text('Mark Johnson'),
-            subtitle: const Text('Edit Profile Info'),
-            onTap: () {
-              // Edit profile logic
-            },
-          ),
-          ListTile(
-            title: const Text('My Pledged Gifts'),
-            onTap: () => Navigator.pushNamed(context, '/pledged-gifts'),
-          ),
-          Switch(
-            value: Provider.of<ThemeProvider>(context)
-                .isDark, // Use the value from ThemeProvider
-            onChanged: (value) async {
-              // Toggle theme in ThemeProvider
-              await Provider.of<ThemeProvider>(context, listen: false)
-                  .toggleTheme();
-
-              // Save the new theme preference in SharedPreferences
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setInt("theme", value ? 1 : 0);
-            },
-          ),
-        ],
+      body: FutureBuilder(
+        future: _loadProfile(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Text('Loading....');
+            default:
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final userData = snapshot.data as UserModel;
+                return Column(
+                  children: [
+                    const CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('images/logo.jpg'),
+                    ),
+                    ListTile(
+                      title: Text('${userData.name}'),
+                      subtitle: const Text('Edit Profile Info'),
+                      onTap: () {
+                        // Edit profile logic
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('My Pledged Gifts'),
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/pledged-gifts'),
+                    ),
+                    Switch(
+                      value: Provider.of<ThemeProvider>(context)
+                          .isDark, // Use the value from ThemeProvider
+                      onChanged: (value) async {
+                        // Toggle theme in ThemeProvider
+                        await Provider.of<ThemeProvider>(context, listen: false)
+                            .toggleTheme();
+                      },
+                    ),
+                  ],
+                );
+              }
+          }
+        },
       ),
     );
   }

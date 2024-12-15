@@ -28,7 +28,7 @@ class UserRepoRemote implements UserRepository {
   @override
   Future<UserModel?> getUser(String id) async {
     try {
-      print("Fetchig");
+      print("Fetching");
       // Fetch the user data from Firestore by user ID
       DocumentSnapshot snapshot =
           await _firestore.collection('users').doc(id).get();
@@ -85,6 +85,32 @@ class UserRepoRemote implements UserRepository {
       QuerySnapshot snapshot = await _firestore
           .collection('users')
           .where('name', isEqualTo: name)
+          .get();
+
+      // Check if any user is found with the specified name
+      if (snapshot.docs.isNotEmpty) {
+        // Map the first matching document to a UserModel
+        var userDoc = snapshot.docs.first;
+        return UserModel.fromJson(
+            {"id": userDoc.id, ...userDoc.data() as Map<String, dynamic>});
+      } else {
+        // If no user is found with that name, return null
+        print("No user found");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching user by name: $e");
+      return null;
+    }
+  }
+
+  Future<UserModel?> getUserByPhoneNo(String phoneNo) async {
+    try {
+      print("Fetching $phoneNo by phoneNo");
+      // Query Firestore for the user with the matching name
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .where('phoneNo', isEqualTo: phoneNo)
           .get();
 
       // Check if any user is found with the specified name

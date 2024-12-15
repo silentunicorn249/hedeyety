@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/routes/routes.dart';
 import '../../../auth/data/datasources/user_repo_local.dart';
-import '../../../auth/presentation/providers/profile_provider.dart';
+import '../../../events/presentation/providers/friends_provider.dart';
 import '../../../events/presentation/screens/events_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -49,7 +49,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(_auth.currentUser?.uid);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -81,7 +80,7 @@ class HomeScreen extends StatelessWidget {
             child: const Text("Add Event"),
           ),
           Expanded(
-            child: Consumer<ProfileProvider>(
+            child: Consumer<FriendsProvider>(
               builder: (context, profileProvider, child) {
                 if (profileProvider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -96,7 +95,7 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final person = profileProvider.profiles[index];
                     return ListTile(
-                      leading: CircleAvatar(),
+                      leading: const CircleAvatar(),
                       title: Text(person.name),
                       subtitle: Text('Email: ${person.email}'),
                       trailing: IconButton(
