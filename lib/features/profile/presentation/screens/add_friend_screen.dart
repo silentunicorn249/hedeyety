@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
+import 'package:hedeyety/features/auth/data/datasources/user_repo_remote.dart';
+import 'package:hedeyety/features/auth/data/models/user_model.dart';
+import 'package:provider/provider.dart';
 
-import '../../../auth/data/models/user_model.dart';
+import '../../../auth/presentation/providers/profile_provider.dart';
 
 class AddFriendScreen extends StatelessWidget {
   String friendName = "";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,12 +40,18 @@ class AddFriendScreen extends StatelessWidget {
               MaterialButton(
                 color: Colors.lightBlueAccent,
                 onPressed: () async {
-                  final repo = await UserRepoLocal();
-                  await repo.saveUser(UserModel(
-                      id: "u1",
-                      name: friendName,
-                      email: "awMail",
-                      preferences: {}));
+                  final profileProvider =
+                      Provider.of<ProfileProvider>(context, listen: false);
+                  final remote_repo = UserRepoRemote();
+                  UserModel? user = await remote_repo.getUserByName(friendName);
+                  print(user?.email);
+                  if (user != null) {
+                    profileProvider.addUser(user);
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("No user found")));
+                  }
+
                   Navigator.pop(context);
                 },
                 child: const Text(

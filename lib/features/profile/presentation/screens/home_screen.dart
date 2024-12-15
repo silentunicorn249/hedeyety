@@ -1,34 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedeyety/core/routes/routes.dart';
-import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
-import 'package:hedeyety/features/auth/domain/entities/user.dart'; // Ensure this import exists
 import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
-import 'package:hedeyety/features/events/presentation/screens/events_list_screen.dart';
 import 'package:hedeyety/features/profile/presentation/screens/add_friend_screen.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+import '../../../../core/routes/routes.dart';
+import '../../../auth/data/datasources/user_repo_local.dart';
+import '../../../auth/presentation/providers/profile_provider.dart';
+import '../../../events/presentation/screens/events_list_screen.dart';
 
-class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<UserEntity>>
-      _profilesFuture; // Declare a future for profiles
+class HomeScreen extends StatelessWidget {
+  final _auth = FirebaseAuth.instance;
+  final _repo = UserRepoLocal();
 
-  Future<List<UserEntity>> getProfiles() async {
-    final repo = UserRepoLocal();
-    final res = await repo.getALlUsers();
-    return res;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _profilesFuture = getProfiles(); // Initialize the future to load profiles
-  }
-
-  void addEventModal() {
+  void addEventModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -42,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void addFriendModal() {
+  void addFriendModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -56,78 +41,68 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void handleLogout() {
+  void handleLogout(BuildContext context) async {
+    await _repo.eraseAll();
     FirebaseAuth.instance.signOut();
     Navigator.popAndPushNamed(context, AppRoutes.welcome);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(_auth.currentUser?.uid);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: <Widget>[
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            // add settings
+          },
+        ),
+        title: const Text('Friends List'),
+        actions: [
           IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.logout_outlined),
             onPressed: () {
-              // do something
+              // Logout logic
+              handleLogout(context);
             },
           ),
         ],
-        leading: MaterialButton(
-          onPressed: handleLogout,
-          child: const Icon(Icons.logout_outlined),
-        ),
-        title: const Text('Friends List'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: addFriendModal,
+        onPressed: () => addFriendModal(context),
         child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
           MaterialButton(
-            onPressed: addEventModal,
+            onPressed: () => addEventModal(context),
             child: const Text("Add Event"),
           ),
           Expanded(
-            child: FutureBuilder<List<UserEntity>>(
-              future: _profilesFuture, // Future for profiles
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child:
-                          CircularProgressIndicator()); // Show loading indicator
+            child: Consumer<ProfileProvider>(
+              builder: (context, profileProvider, child) {
+                if (profileProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return Center(
-                      child: Text(
-                          'Error: ${snapshot.error}')); // Show error if any
+                if (profileProvider.profiles.isEmpty) {
+                  return const Center(child: Text('No Friends available yet.'));
                 }
-
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
-                      child: Text('No profiles available')); // Show if no data
-                }
-
-                // Data has been fetched successfully
-                List<UserEntity> persons = snapshot.data!;
 
                 return ListView.builder(
-                  itemCount: persons.length,
+                  itemCount: profileProvider.profiles.length,
                   itemBuilder: (context, index) {
-                    final person = persons[index];
+                    final person = profileProvider.profiles[index];
                     return ListTile(
-                      leading: CircleAvatar(
-                          // backgroundImage: NetworkImage(person.profileImage), // Use the profile image URL
-                          ),
+                      leading: CircleAvatar(),
                       title: Text(person.name),
                       subtitle: Text('Email: ${person.email}'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => profileProvider.deleteUser(person.id),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,

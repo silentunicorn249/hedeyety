@@ -1,4 +1,5 @@
 import 'package:hedeyety/features/auth/domain/repository/user_repository.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/user_model.dart';
@@ -6,7 +7,8 @@ import '../models/user_model.dart';
 class UserRepoLocal implements UserRepository {
   static final UserRepoLocal _instance = UserRepoLocal._();
   late Database _db;
-  final String DB_NAME = "users";
+  final DB_PATH = "my_db";
+  final String USER_TABLE_NAME = "users";
 
   UserRepoLocal._();
 
@@ -14,10 +16,10 @@ class UserRepoLocal implements UserRepository {
 
   // Ensure database is initialized only once
   Future<void> initialize(String dbPath) async {
-    if (_db != null) return; // Prevent re-initializing
-    print("Initializing database...");
+    print("Called");
+    print("Initializing database $dbPath...");
     _db = await openDatabase(
-      dbPath,
+      join(await getDatabasesPath(), dbPath),
       version: 1,
       onCreate: (db, version) {
         db.execute(
@@ -35,25 +37,41 @@ class UserRepoLocal implements UserRepository {
 
   @override
   Future<void> deleteUser(String id) async {
-    await _db.delete(DB_NAME, where: 'id = ?', whereArgs: [id]);
+    await _db.delete(USER_TABLE_NAME, where: 'id = ?', whereArgs: [id]);
   }
 
   @override
   Future<List<UserModel>> getALlUsers() async {
-    final result = await _db.query(DB_NAME);
+    final result = await _db.query(USER_TABLE_NAME);
     final objs = result.map((map) => UserModel.fromJson(map)).toList();
+    print(objs[0].toJson());
     return objs;
   }
 
   @override
   Future<Map<String, dynamic>?> getUser(String id) async {
-    final result = await _db.query(DB_NAME, where: 'id = ?', whereArgs: [id]);
+    final result =
+        await _db.query(USER_TABLE_NAME, where: 'id = ?', whereArgs: [id]);
     return result.isNotEmpty ? result.first : null;
   }
 
   @override
   Future<void> saveUser(UserModel user) async {
-    await _db.insert(DB_NAME, user.toJson(),
+    print("Inserting ${user.toJson()}");
+    await _db.insert(USER_TABLE_NAME, user.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> eraseAll() async {
+    // Drop all tables
+    await _db.execute('DROP TABLE IF EXISTS users');
+    await _db.execute('DROP TABLE IF EXISTS events');
+    await _db.execute('DROP TABLE IF EXISTS gifts');
+    await _db.execute('DROP TABLE IF EXISTS friends');
+
+    print("Deleted old DBs");
+
+    // Recreate the tables
+    await initialize(DB_PATH);
   }
 }

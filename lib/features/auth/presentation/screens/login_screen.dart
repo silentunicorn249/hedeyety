@@ -27,11 +27,19 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       Navigator.pushNamed(context, AppRoutes.homeStack);
+    } on FirebaseAuthException catch (e) {
+      print("Error: ${e.code}");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.code)));
       setState(() {
         showSpin = false;
       });
     } catch (e) {
       print(e);
+    } finally {
+      setState(() {
+        showSpin = false;
+      });
     }
   }
 

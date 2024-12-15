@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../../core/routes/routes.dart';
+import '../../data/models/user_model.dart';
 import '../widgets/main_button.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -14,8 +16,10 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
   bool showSpin = false;
   late String email;
+  late String name;
   late String password;
 
   void handleSignup() async {
@@ -26,9 +30,17 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      if (newUser != null) {
-        Navigator.pushNamed(context, AppRoutes.homeStack);
-      }
+      final custUser = UserModel(
+        id: newUser.user!.uid,
+        name: name,
+        email: email,
+        preferences: {},
+      );
+      await _firestore
+          .collection('users')
+          .doc(custUser.id)
+          .set(custUser.toJson());
+      Navigator.pushNamed(context, AppRoutes.homeStack);
       setState(() {
         showSpin = false;
       });
@@ -37,6 +49,11 @@ class _SignupScreenState extends State<SignupScreen> {
       print("Error: ${e.code}");
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.code)));
+      setState(() {
+        showSpin = false;
+      });
+    } catch (e) {
+      print("Else");
       setState(() {
         showSpin = false;
       });
@@ -64,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 48.0,
               ),
               TextField(
@@ -77,6 +94,36 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black),
+                onChanged: (value) {
+                  //Do something with the user input.
+                  name = value;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Enter your name',
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(

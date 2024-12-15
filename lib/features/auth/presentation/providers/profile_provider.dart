@@ -7,21 +7,35 @@ import '../../domain/entities/user.dart';
 class ProfileProvider with ChangeNotifier {
   List<UserEntity> _profiles = [];
   bool _isLoading = false;
+  bool _isInitialized = false; // Prevent multiple fetch calls
 
-  final UserRepoLocal _repo =
-      UserRepoLocal(); // Initialize the local repository
+  final UserRepoLocal _repo = UserRepoLocal(); // Local repository instance
 
   List<UserEntity> get profiles => _profiles;
   bool get isLoading => _isLoading;
 
-  // Fetch all profiles from the database
-  Future<void> fetchProfiles() async {
+  // Constructor to initialize profiles
+  ProfileProvider() {
+    initializeProfiles(); // Trigger data fetching
+  }
+
+  // Public method to allow initialization when needed
+  Future<void> initializeProfiles() async {
+    if (_isInitialized) return; // Prevent re-fetching if already initialized
+    _isInitialized = true;
+
     _isLoading = true;
     notifyListeners();
 
-    _profiles = await _repo.getALlUsers();
-    _isLoading = false;
-    notifyListeners();
+    try {
+      _profiles = await _repo.getALlUsers();
+    } catch (e) {
+      // Handle errors, optionally log them
+      debugPrint('Error fetching profiles: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   // Add a user and sync with the database
