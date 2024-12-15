@@ -28,22 +28,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('My Profile')),
+      appBar: AppBar(
+        title: const Text('My Profile'),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 50,
             backgroundImage: AssetImage('images/logo.jpg'),
           ),
           ListTile(
-            title: Text('Mark Johnson'),
-            subtitle: Text('Edit Profile Info'),
+            title: const Text('Mark Johnson'),
+            subtitle: const Text('Edit Profile Info'),
             onTap: () {
               // Edit profile logic
             },
           ),
           ListTile(
-            title: Text('My Pledged Gifts'),
+            title: const Text('My Pledged Gifts'),
             onTap: () => Navigator.pushNamed(context, '/pledged-gifts'),
           ),
           Switch(

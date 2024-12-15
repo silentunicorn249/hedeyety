@@ -1,35 +1,16 @@
-class Event {
+class EventEntity {
   String id;
   String name;
-  DateTime date;
   String location;
-  String description;
+  String desc;
   String userId;
+  String date;
 
-  Event({
-    required this.id,
-    required this.name,
-    required this.date,
-    required this.location,
-    required this.description,
-    required this.userId,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'date': date.toIso8601String(),
-        'location': location,
-        'description': description,
-        'userId': userId,
-      };
-
-  factory Event.fromJson(Map<String, dynamic> json) => Event(
-        id: json['id'],
-        name: json['name'],
-        date: DateTime.parse(json['date']),
-        location: json['location'],
-        description: json['description'],
-        userId: json['userId'],
-      );
+  EventEntity(
+      {required this.id,
+      required this.desc,
+      required this.name,
+      required this.location,
+      required this.userId,
+      required this.date});
 }

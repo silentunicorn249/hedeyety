@@ -107,7 +107,8 @@ class HomeScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EventsListScreen(),
+                            builder: (context) => EventsListScreen(
+                                userId: person.id, name: person.name),
                           ),
                         );
                       },

@@ -7,7 +7,14 @@ import '../../domain/entities/gift.dart';
 import 'gift_detail_screen.dart';
 
 class GiftListScreen extends StatefulWidget {
-  Event event = DummyData.events[0];
+  EventEntity event = EventEntity(
+    id: "id",
+    desc: "desc",
+    name: "name",
+    location: "location",
+    userId: "userId",
+    date: DateTime(2017, 9, 7, 17, 30).toString(),
+  );
 
   @override
   _GiftListScreenState createState() => _GiftListScreenState();

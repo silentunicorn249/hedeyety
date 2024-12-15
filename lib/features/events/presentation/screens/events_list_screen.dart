@@ -1,38 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/events/data/models/event_model.dart';
 
-import '../../../../core/constants/dummy_data.dart';
-import '../../../auth/domain/entities/user.dart';
 import '../../../gifts/presentation/screens/gift_list_screen.dart';
-import '../../domain/entities/event.dart';
 
-class EventsListScreen extends StatefulWidget {
-  UserEntity person = DummyData.users[0];
-  @override
-  _EventListScreenState createState() => _EventListScreenState();
-}
+class EventsListScreen extends StatelessWidget {
+  late String userId;
+  late String name;
+  EventsListScreen({required this.userId, required this.name});
 
-class _EventListScreenState extends State<EventsListScreen> {
-  List<Event> events = [];
-
-  @override
-  void initState() {
-    super.initState();
-    events = DummyData.events; // Initialize with person's events
-  }
-
-  void _showAddEventModal() {}
+  List<EventModel> events = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.person.name}\'s Events')),
+      appBar: AppBar(title: Text('${name}\'s Events')),
       body: ListView.builder(
         itemCount: events.length,
         itemBuilder: (context, index) {
           final event = events[index];
           return ListTile(
             title: Text(event.name),
-            subtitle: Text('Date: ${event.date.toLocal()}'),
+            subtitle: Text('Desc: ${event.date}'),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -41,12 +29,6 @@ class _EventListScreenState extends State<EventsListScreen> {
             ),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddEventModal();
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

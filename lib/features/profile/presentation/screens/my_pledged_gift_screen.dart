@@ -11,7 +11,10 @@ class PledgedGiftsScreen extends StatelessWidget {
     final pledgedGifts = DummyData.gifts;
 
     return Scaffold(
-      appBar: AppBar(title: Text('My Pledged Gifts')),
+      appBar: AppBar(
+        title: const Text('My Pledged Gifts'),
+        automaticallyImplyLeading: false,
+      ),
       body: ListView.builder(
         itemCount: pledgedGifts.length,
         itemBuilder: (context, index) {

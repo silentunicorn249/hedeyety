@@ -10,7 +10,6 @@ import 'features/auth/data/datasources/user_repo_local.dart';
 import 'features/auth/presentation/providers/profile_provider.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/signup_screen.dart';
-import 'features/events/presentation/screens/events_list_screen.dart';
 import 'features/profile/presentation/screens/home_screen.dart';
 import 'features/profile/presentation/screens/home_stack.dart';
 import 'features/profile/presentation/screens/profile_screen.dart';
@@ -75,7 +74,6 @@ class _HedieatyAppState extends State<HedieatyApp> {
               AppRoutes.signup: (context) => SignupScreen(),
               AppRoutes.home: (context) => HomeScreen(),
               AppRoutes.homeStack: (context) => HomeStack(),
-              AppRoutes.events: (context) => EventsListScreen(),
               AppRoutes.profile: (context) => ProfileScreen(),
             },
           );

@@ -1,5 +1,4 @@
 import '../../features/auth/domain/entities/user.dart';
-import '../../features/events/domain/entities/event.dart';
 import '../../features/gifts/domain/entities/gift.dart';
 import '../../features/gifts/domain/entities/pledge.dart';
 import '../../features/profile/domain/entities/notification.dart';
@@ -26,33 +25,6 @@ class DummyData {
       email: 'alice@example.com',
       preferences: {"mode": "Dark"},
       phoneNo: '',
-    ),
-  ];
-
-  static List<Event> events = [
-    Event(
-      id: 'e1',
-      userId: 'u1',
-      name: 'Alice\'s Birthday',
-      date: DateTime(2024, 5, 12),
-      location: 'Alice\'s Home',
-      description: 'Birthday Party',
-    ),
-    Event(
-      id: 'e2',
-      userId: 'u2',
-      name: 'Company Outing',
-      date: DateTime(2024, 6, 20),
-      location: 'Beach Resort',
-      description: 'Team building event',
-    ),
-    Event(
-      id: 'e3',
-      userId: 'u2',
-      name: 'Camping Adventure',
-      date: DateTime(2024, 7, 25),
-      location: 'National Park',
-      description: 'Weekend camping trip',
     ),
   ];
 
