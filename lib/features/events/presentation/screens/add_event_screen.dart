@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedeyety/features/events/data/datasources/event_repo_remote.dart';
+import 'package:hedeyety/features/events/data/datasources/event_repo_local.dart';
 import 'package:hedeyety/features/events/data/models/event_model.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -32,7 +32,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       print(eventDate.text);
       var userUID = _auth.currentUser!.uid;
       print(userUID);
-      final repo = EventRepoRemote();
+      final repo = EventRepoLocal();
       repo.saveEvent(EventModel(
           id: userUID + eventName.text,
           name: eventName.text,
@@ -43,6 +43,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Event Saved Successfully!')),
       );
+      Navigator.pop(context);
     }
   }
 

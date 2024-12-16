@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:hedeyety/features/events/data/datasources/event_repo_local.dart';
 import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,8 @@ void main() async {
 
   final userRepo = UserRepoLocal();
   await userRepo.initialize("my_db");
+  final frRepo = EventRepoLocal();
+  await frRepo.initialize("my_db");
   await Firebase.initializeApp();
 
   runApp(HedieatyApp());

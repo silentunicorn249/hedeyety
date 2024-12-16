@@ -12,16 +12,17 @@ class EventModel extends EventEntity {
   Map<String, dynamic> toJson() => {
         'id': id, //TODO if the relation breaks check here (3aref enak hatensa)
         'name': name,
-        'email': location,
-        'phoneNo': desc,
+        'location': location,
+        'description': desc,
         'userId': userId,
+        'date': date
       };
 
   factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
       id: json['id'],
       name: json['name'],
       location: json['location'],
-      desc: json["phoneNo"],
+      desc: json["description"],
       userId: json["userId"],
       date: json['date']);
 }
