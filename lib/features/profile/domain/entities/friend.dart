@@ -1,8 +1,8 @@
-class Friend {
-  int userId;
-  int friendId;
+class FriendEntity {
+  String userId;
+  String friendId;
 
-  Friend({required this.userId, required this.friendId});
+  FriendEntity({required this.userId, required this.friendId});
 
   Map<String, dynamic> toMap() {
     return {

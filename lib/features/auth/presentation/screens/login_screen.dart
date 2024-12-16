@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/core/routes/routes.dart';
+import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../../../profile/data/datasources/friends_repo_remote.dart';
 import '../widgets/main_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,6 +28,17 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final user = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+      final remo = FriendRepoRemote();
+      final local = UserRepoLocal();
+      final friends = await remo.getFriendsAsUsers(user.user!.uid);
+      for (var friend in friends) {
+        debugPrint("${friend.id} > ${friend.email}");
+        await local.saveUser(friend);
+      }
+      final res = await local.getALlUsers();
+      for (var r in res) {
+        debugPrint("${r.id} > ${r.phoneNo}");
+      }
       Navigator.pushNamed(context, AppRoutes.homeStack);
     } on FirebaseAuthException catch (e) {
       print("Error: ${e.code}");

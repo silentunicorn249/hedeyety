@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/auth/data/models/user_model.dart';
+import 'package:hedeyety/features/profile/data/datasources/friends_repo_remote.dart';
 
 import '../../../auth/data/datasources/user_repo_local.dart';
 import '../../../auth/domain/entities/user.dart';
@@ -7,9 +8,11 @@ import '../../../auth/domain/entities/user.dart';
 class FriendsProvider with ChangeNotifier {
   List<UserEntity> _profiles = [];
   bool _isLoading = false;
-  bool _isInitialized = false; // Prevent multiple fetch calls
 
-  final UserRepoLocal _repo = UserRepoLocal(); // Local repository instance
+  final UserRepoLocal _local_repo =
+      UserRepoLocal(); // Local repository instance
+  final FriendRepoRemote _remote_repo =
+      FriendRepoRemote(); // Local repository instance
 
   List<UserEntity> get profiles => _profiles;
 
@@ -22,16 +25,18 @@ class FriendsProvider with ChangeNotifier {
 
   // Public method to allow initialization when needed
   Future<void> initializeProfiles() async {
-    if (_isInitialized) return; // Prevent re-fetching if already initialized
-    _isInitialized = true;
-
     _isLoading = true;
     notifyListeners();
 
     try {
-      debugPrint("ProfileProvider fetch");
-      _profiles = await _repo.getALlUsers();
-      print(profiles);
+      debugPrint("FriendsProvider fetch");
+      final remote_friends = await _remote_repo.getALlFriends();
+      if (remote_friends.length > 0) {
+        print(remote_friends.first.friendId);
+        print(remote_friends.first.userId);
+      }
+      _profiles = await _local_repo.getALlUsers();
+      print(profiles.first?.email);
     } catch (e) {
       // Handle errors, optionally log them
       debugPrint('Error fetching profiles: $e');
@@ -43,14 +48,14 @@ class FriendsProvider with ChangeNotifier {
 
   // Add a user and sync with the database
   Future<void> addUser(UserModel user) async {
-    await _repo.saveUser(user); // Save to database
+    await _local_repo.saveUser(user); // Save to database
     _profiles.add(user); // Add to local list
     notifyListeners();
   }
 
   // Delete a user and sync with the database
   Future<void> deleteUser(String userId) async {
-    await _repo.deleteUser(userId); // Remove from database
+    await _local_repo.deleteUser(userId); // Remove from database
     _profiles
         .removeWhere((user) => user.id == userId); // Remove from local list
     notifyListeners();

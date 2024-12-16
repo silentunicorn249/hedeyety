@@ -94,6 +94,8 @@ class HomeScreen extends StatelessWidget {
                   itemCount: profileProvider.profiles.length,
                   itemBuilder: (context, index) {
                     final person = profileProvider.profiles[index];
+                    debugPrint("Dodged a bullet ${person.email}");
+
                     return ListTile(
                       leading: const CircleAvatar(),
                       title: Text(person.name),
