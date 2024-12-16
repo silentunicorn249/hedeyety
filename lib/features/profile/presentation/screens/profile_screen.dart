@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/auth/data/datasources/user_repo_remote.dart';
 import 'package:hedeyety/features/auth/data/models/user_model.dart';
+import 'package:hedeyety/features/profile/presentation/screens/my_pledged_gift_screen.dart';
 import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -58,8 +59,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ListTile(
                       title: const Text('My Pledged Gifts'),
-                      onTap: () =>
-                          Navigator.pushNamed(context, '/pledged-gifts'),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PledgedGiftsScreen())),
                     ),
                     Switch(
                       value: Provider.of<ThemeProvider>(context)

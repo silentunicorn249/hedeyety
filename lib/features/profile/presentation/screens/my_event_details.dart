@@ -19,6 +19,7 @@ class MyEventDetailsScreen extends StatefulWidget {
 
 class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
   late Future<List<GiftModel>> _giftsFuture;
+
   // final GiftRepoLocal _giftRepoLocal = GiftRepoLocal();
   final GiftRepoRemote _giftRepoRemote = GiftRepoRemote();
 
@@ -70,7 +71,8 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
         category: updatedGiftData["category"],
         description: updatedGiftData["description"],
         price: updatedGiftData["price"],
-        isPledged: gift.isPledged, // Keep pledge status the same
+        isPledged: gift.isPledged,
+        // Keep pledge status the same
         eventId: updatedGiftData["eventId"],
       );
 
@@ -148,6 +150,7 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isCreator = widget.currentUserId == widget.event.userId;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.event.name),
@@ -208,19 +211,21 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
             ),
           ),
 
-          // Add gift button
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton.icon(
-              onPressed: _addGift,
-              icon: const Icon(Icons.add),
-              label: const Text("Add Gift"),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.blue,
+          if (isCreator)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                onPressed: _addGift,
+                icon: const Icon(Icons.add),
+                label: const Text("Add Gift"),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.blue,
+                ),
               ),
             ),
-          ),
+
+          // Add gift button
         ],
       ),
     );

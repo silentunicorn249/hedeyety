@@ -51,4 +51,18 @@ class GiftRepoRemote implements GiftRepository {
         await _firestore.collection(GIFT_COLLECTION_NAME).doc(id).get();
     return snapshot.exists ? GiftModel.fromJson(snapshot.data()!) : null;
   }
+
+  Future<List<GiftModel>> getAllPledgedGifts() async {
+    try {
+      // Here you can use Firebase or an API call to fetch data
+      // For the purpose of this example, assume we have a remote API or Firebase query to get the gifts
+
+      final gifts = await getAllGifts(); // Placeholder for the actual API call
+      return gifts
+          .where((gift) => gift.isPledged)
+          .toList(); // Only return pledged gifts
+    } catch (e) {
+      throw Exception('Failed to load pledged gifts: $e');
+    }
+  }
 }
