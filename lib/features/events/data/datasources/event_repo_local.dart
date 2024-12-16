@@ -54,13 +54,13 @@ class EventRepoLocal implements EventRepository {
     );
   }
 
-  Future<void> updateEventPrivateFlag(String eventId, bool isPrivate) async {
+  Future<void> updateEventPrivateFlag(String eventId, bool isPublic) async {
     await _db.update(
       EVENT_TABLE_NAME,
-      {'private': isPrivate ? 1 : 0}, // Convert boolean to integer
+      {'isPublic': isPublic ? 1 : 0}, // Convert boolean to integer
       where: 'id = ?',
       whereArgs: [eventId],
     );
-    print("Updated private flag for event $eventId to ${isPrivate ? 1 : 0}");
+    print("Updated isPublic flag for event $eventId to ${isPublic ? 1 : 0}");
   }
 }

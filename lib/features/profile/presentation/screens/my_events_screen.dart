@@ -63,12 +63,12 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     value: event.isPublic,
                     onChanged: (bool? newValue) async {
                       if (newValue!) {
-                        setState(() {
-                          event.isPublic = newValue;
-                        });
                         await EventRepoLocal()
                             .updateEventPrivateFlag(event.id, newValue);
                         await EventRepoRemote().saveEvent(event);
+                        setState(() {
+                          event.isPublic = newValue;
+                        });
                       }
                     },
                   ),

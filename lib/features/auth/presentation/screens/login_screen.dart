@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/core/routes/routes.dart';
 import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
+import 'package:hedeyety/features/events/data/datasources/event_repo_local.dart';
+import 'package:hedeyety/features/events/data/datasources/event_repo_remote.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email, password: password);
       final remo = FriendRepoRemote();
       final local = UserRepoLocal();
-      final friends = await remo.getFriendsAsUsers(user.user!.uid);
+      var userId = user.user!.uid;
+      final friends = await remo.getFriendsAsUsers(userId);
       final friendsProvider =
           Provider.of<FriendsProvider>(context, listen: false);
 
@@ -40,6 +43,15 @@ class _LoginScreenState extends State<LoginScreen> {
         debugPrint("${friend.id} > ${friend.email}");
         await friendsProvider.addUser(friend);
       }
+
+      final remoEve = EventRepoRemote();
+      final remoEvs = await remoEve.getEventsByUserId(userId);
+      final localEve = EventRepoLocal();
+
+      for (var event in remoEvs) {
+        localEve.saveEvent(event);
+      }
+
       final res = await local.getALlUsers();
       for (var r in res) {
         debugPrint("${r.id} > ${r.phoneNo}");
