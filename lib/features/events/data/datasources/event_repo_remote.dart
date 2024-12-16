@@ -16,6 +16,7 @@ class EventRepoRemote implements EventRepository {
   @override
   Future<void> saveEvent(EventModel event) async {
     try {
+      event.isPublic = true;
       // Save the event to the Firestore collection
       await _firestore.collection('events').doc(event.id).set(event.toJson());
       print("Event saved: ${event.id}");
