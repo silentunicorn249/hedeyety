@@ -102,7 +102,9 @@ class HomeScreen extends StatelessWidget {
                       subtitle: Text('Email: ${person.email}'),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => profileProvider.deleteUser(person.id),
+                        onPressed: () {
+                          profileProvider.deleteUser(person.id);
+                        },
                       ),
                       onTap: () {
                         Navigator.push(

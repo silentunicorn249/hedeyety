@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../auth/data/models/user_model.dart';
@@ -54,13 +55,35 @@ class FriendRepoRemote implements FriendRepository {
 
   // Delete a friend document
   @override
-  Future<void> deleteFriend(String id) async {
+  Future<void> deleteFriend(String friendId) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
     try {
-      await _firestore.collection('friends').doc(id).delete();
-      print("Friend deleted: $id");
+      // Fetch and delete the relationship where userId → friendId
+      QuerySnapshot userToFriendSnapshot = await _firestore
+          .collection('friends')
+          .where('userId', isEqualTo: userId)
+          .where('friendId', isEqualTo: friendId)
+          .get();
+
+      for (var doc in userToFriendSnapshot.docs) {
+        await doc.reference.delete();
+        print("Deleted relationship: $userId → $friendId");
+      }
+
+      // Fetch and delete the relationship where friendId → userId
+      QuerySnapshot friendToUserSnapshot = await _firestore
+          .collection('friends')
+          .where('userId', isEqualTo: friendId)
+          .where('friendId', isEqualTo: userId)
+          .get();
+
+      for (var doc in friendToUserSnapshot.docs) {
+        await doc.reference.delete();
+        print("Deleted relationship: $friendId → $userId");
+      }
     } catch (e) {
-      print("Error deleting friend: $e");
-      throw Exception("Error deleting friend: $e");
+      print("Error deleting bidirectional friend: $e");
+      throw Exception("Error deleting bidirectional friend: $e");
     }
   }
 

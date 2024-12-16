@@ -55,6 +55,7 @@ class FriendsProvider with ChangeNotifier {
 
   // Delete a user and sync with the database
   Future<void> deleteUser(String userId) async {
+    await _remote_repo.deleteFriend(userId);
     await _local_repo.deleteUser(userId); // Remove from database
     _profiles
         .removeWhere((user) => user.id == userId); // Remove from local list
