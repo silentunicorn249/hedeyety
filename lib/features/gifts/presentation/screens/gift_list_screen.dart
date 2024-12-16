@@ -8,13 +8,13 @@ import 'gift_detail_screen.dart';
 
 class GiftListScreen extends StatefulWidget {
   EventEntity event = EventEntity(
-    id: "id",
-    desc: "desc",
-    name: "name",
-    location: "location",
-    userId: "userId",
-    date: DateTime(2017, 9, 7, 17, 30).toString(),
-  );
+      id: "id",
+      desc: "desc",
+      name: "name",
+      location: "location",
+      userId: "userId",
+      date: DateTime(2017, 9, 7, 17, 30).toString(),
+      isPublic: true);
 
   @override
   _GiftListScreenState createState() => _GiftListScreenState();

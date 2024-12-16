@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/profile/presentation/screens/my_events_screen.dart';
 
 import 'home_screen.dart';
-import 'my_pledged_gift_screen.dart';
 import 'profile_screen.dart';
 
 class HomeStack extends StatefulWidget {
@@ -14,7 +14,7 @@ class _HomeStackState extends State<HomeStack> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    PledgedGiftsScreen(),
+    MyEventsScreen(),
     ProfileScreen(),
   ];
 
@@ -38,7 +38,7 @@ class _HomeStackState extends State<HomeStack> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
-            label: 'Pledged Gifts',
+            label: 'Events',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

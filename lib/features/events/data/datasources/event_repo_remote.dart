@@ -103,4 +103,28 @@ class EventRepoRemote implements EventRepository {
       return null;
     }
   }
+
+  Future<List<EventModel>> getEventsByUserId(String userId) async {
+    try {
+      print("Fetching events for userId: $userId");
+      // Query Firestore for events associated with the given userId
+      QuerySnapshot snapshot = await _firestore
+          .collection('events')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      print(snapshot.docs.first.data());
+
+      // Map the query result to a list of EventModel objects
+      List<EventModel> events = snapshot.docs
+          .map((doc) => EventModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      print(events.first.name);
+      return events;
+    } catch (e) {
+      print("Error fetching events by userId: $e");
+      return [];
+    }
+  }
 }

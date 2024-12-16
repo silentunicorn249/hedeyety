@@ -19,7 +19,7 @@ class EventRepoLocal implements EventRepository {
     db.execute(
         'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, phoneNo TEXT, email TEXT, preferences TEXT)');
     db.execute(
-        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, eventId TEXT)');
+        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, eventId TEXT, private INTEGER)');
     db.execute(
         'CREATE TABLE gifts (id TEXT PRIMARY KEY, name TEXT, description TEXT, category TEXT, price REAL, status TEXT, eventId TEXT)');
     db.execute(
@@ -49,9 +49,9 @@ class EventRepoLocal implements EventRepository {
   @override
   Future<List<EventModel>> getALlEvents() async {
     final result = await _db.query(EVENT_TABLE_NAME);
-    final objs = result.map((map) => EventModel.fromJson(map)).toList();
-    print(objs[0].toJson());
-    return objs;
+    final events = result.map((map) => EventModel.fromJson(map)).toList();
+    print(events.map((e) => e.toJson()).toList()); // Debug log
+    return events;
   }
 
   @override
@@ -64,8 +64,21 @@ class EventRepoLocal implements EventRepository {
   @override
   Future<void> saveEvent(EventModel event) async {
     print("Inserting ${event.toJson()}");
-    await _db.insert(EVENT_TABLE_NAME, event.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await _db.insert(
+      EVENT_TABLE_NAME,
+      event.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateEventPrivateFlag(String eventId, bool isPrivate) async {
+    await _db.update(
+      EVENT_TABLE_NAME,
+      {'private': isPrivate ? 1 : 0}, // Convert boolean to integer
+      where: 'id = ?',
+      whereArgs: [eventId],
+    );
+    print("Updated private flag for event $eventId to ${isPrivate ? 1 : 0}");
   }
 
   Future<void> eraseAll() async {

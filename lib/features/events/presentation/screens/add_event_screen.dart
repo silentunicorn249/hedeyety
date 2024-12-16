@@ -34,12 +34,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
       print(userUID);
       final repo = EventRepoLocal();
       repo.saveEvent(EventModel(
-          id: userUID + eventName.text,
-          name: eventName.text,
-          location: eventLocation.text,
-          desc: eventDesc.text,
-          userId: userUID,
-          date: eventDate.text));
+        id: userUID + eventName.text,
+        name: eventName.text,
+        location: eventLocation.text,
+        desc: eventDesc.text,
+        userId: userUID,
+        date: eventDate.text,
+        isPublic: false,
+      ));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Event Saved Successfully!')),
       );
