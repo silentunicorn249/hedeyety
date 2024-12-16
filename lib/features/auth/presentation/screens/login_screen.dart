@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hedeyety/core/routes/routes.dart';
 import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
 
+import '../../../events/presentation/providers/friends_provider.dart';
 import '../../../profile/data/datasources/friends_repo_remote.dart';
 import '../widgets/main_button.dart';
 
@@ -31,9 +33,12 @@ class _LoginScreenState extends State<LoginScreen> {
       final remo = FriendRepoRemote();
       final local = UserRepoLocal();
       final friends = await remo.getFriendsAsUsers(user.user!.uid);
+      final friendsProvider =
+          Provider.of<FriendsProvider>(context, listen: false);
+
       for (var friend in friends) {
         debugPrint("${friend.id} > ${friend.email}");
-        await local.saveUser(friend);
+        await friendsProvider.addUser(friend);
       }
       final res = await local.getALlUsers();
       for (var r in res) {

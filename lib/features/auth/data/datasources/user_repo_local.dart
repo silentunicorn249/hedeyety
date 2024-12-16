@@ -19,7 +19,7 @@ class UserRepoLocal implements UserRepository {
     db.execute(
         'CREATE TABLE users (id TEXT PRIMARY KEY, name TEXT, phoneNo TEXT, email TEXT, preferences TEXT)');
     db.execute(
-        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, userId TEXT, private INTEGER)');
+        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, userId TEXT, isPublic INTEGER)');
     db.execute(
         'CREATE TABLE gifts (id TEXT PRIMARY KEY, name TEXT, description TEXT, category TEXT, price REAL, status TEXT, eventId TEXT)');
     db.execute(
@@ -31,7 +31,7 @@ class UserRepoLocal implements UserRepository {
     print("Called");
     print("Initializing database $dbPath...");
     _db = await openDatabase(
-      join(await getDatabasesPath(), "local_db"),
+      join(await getDatabasesPath(), "my_db"),
       version: 1,
       onCreate: (db, version) {
         initCommands(db);

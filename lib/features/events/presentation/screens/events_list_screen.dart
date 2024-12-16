@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hedeyety/features/events/data/datasources/event_repo_remote.dart';
 import 'package:hedeyety/features/events/data/models/event_model.dart';
 
-import '../../../gifts/presentation/screens/gift_list_screen.dart';
+import '../../../profile/presentation/screens/my_event_details.dart';
 
 class EventsListScreen extends StatelessWidget {
   final String userId;
@@ -33,7 +33,7 @@ class EventsListScreen extends StatelessWidget {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => GiftListScreen(),
+                      builder: (context) => MyEventDetailsScreen(event: event),
                     ),
                   ),
                 );

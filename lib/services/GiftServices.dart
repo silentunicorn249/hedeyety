@@ -1,13 +1,13 @@
 import '../features/gifts/domain/entities/gift.dart';
 
 class GiftService {
-  List<Gift> _dummyGifts = [
-    Gift(
+  List<GiftEntity> _dummyGifts = [
+    GiftEntity(
         id: '1',
         name: 'Smartphone',
         description: 'Latest iPhone',
         category: 'Electronics'),
-    Gift(
+    GiftEntity(
         id: '2',
         name: 'Flutter Book',
         description: 'Learn Flutter',
@@ -15,7 +15,7 @@ class GiftService {
   ];
 
   // Simulate fetching all gifts asynchronously
-  Future<List<Gift>> getGifts() async {
+  Future<List<GiftEntity>> getGifts() async {
     await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
     return _dummyGifts;
   }

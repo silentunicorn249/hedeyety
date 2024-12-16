@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/core/constants/dummy_data.dart';
 
 import '../../domain/entities/gift.dart';
 
 class GiftDetailsScreen extends StatefulWidget {
-  Gift gift = DummyData.gifts[0];
+  GiftEntity gift = GiftEntity(
+      id: "id",
+      name: "name",
+      description: "description",
+      category: "category",
+      price: 123,
+      isPledged: true,
+      eventId: "eventId");
 
   @override
   _GiftDetailsScreenState createState() => _GiftDetailsScreenState();

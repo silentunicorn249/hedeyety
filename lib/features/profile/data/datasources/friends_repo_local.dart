@@ -1,4 +1,3 @@
-import 'package:hedeyety/features/auth/domain/repository/friend_repository.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -15,28 +14,13 @@ class FriendRepoLocal implements FriendRepository {
 
   factory FriendRepoLocal() => _instance;
 
-  Future<void> initCommands(Database db) async {
-    print("Creating tables");
-    db.execute(
-        'CREATE TABLE friends (id TEXT PRIMARY KEY, name TEXT, phoneNo TEXT, email TEXT, preferences TEXT)');
-    db.execute(
-        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, friendId TEXT)');
-    db.execute(
-        'CREATE TABLE gifts (id TEXT PRIMARY KEY, name TEXT, description TEXT, category TEXT, price REAL, status TEXT, eventId TEXT)');
-    db.execute(
-        'CREATE TABLE friends (friendId TEXT, friendId TEXT, PRIMARY KEY (friendId, friendId))');
-  }
-
   // Ensure database is initialized only once
   Future<void> initialize(String dbPath) async {
     print("Called");
     print("Initializing database $dbPath...");
     _db = await openDatabase(
-      join(await getDatabasesPath(), "local_db"),
+      join(await getDatabasesPath(), "my_db"),
       version: 1,
-      onCreate: (db, version) {
-        initCommands(db);
-      },
     );
     print("Database initialized: $_db");
   }
@@ -66,17 +50,5 @@ class FriendRepoLocal implements FriendRepository {
     print("Inserting ${friend.toJson()}");
     await _db.insert(USER_TABLE_NAME, friend.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  Future<void> eraseAll() async {
-    // Drop all tables
-    await _db.execute('DROP TABLE IF EXISTS friends');
-    await _db.execute('DROP TABLE IF EXISTS events');
-    await _db.execute('DROP TABLE IF EXISTS gifts');
-    await _db.execute('DROP TABLE IF EXISTS friends');
-    print("Deleted old DBs");
-
-    // Recreate the tables
-    await initCommands(_db);
   }
 }

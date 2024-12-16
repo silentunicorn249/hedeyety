@@ -14,30 +14,13 @@ class EventRepoLocal implements EventRepository {
 
   factory EventRepoLocal() => _instance;
 
-  Future<void> initCommands(Database db) async {
-    print("Creating tables");
-    db.execute(
-        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, phoneNo TEXT, email TEXT, preferences TEXT)');
-    db.execute(
-        'CREATE TABLE events (id TEXT PRIMARY KEY, name TEXT, date TEXT, location TEXT, description TEXT, eventId TEXT, private INTEGER)');
-    db.execute(
-        'CREATE TABLE gifts (id TEXT PRIMARY KEY, name TEXT, description TEXT, category TEXT, price REAL, status TEXT, eventId TEXT)');
-    db.execute(
-        'CREATE TABLE friends (eventId TEXT, friendId TEXT, PRIMARY KEY (eventId, friendId))');
-  }
-
   // Ensure database is initialized only once
   @override
   Future<void> initialize(String dbPath) async {
     print("Called");
     print("Initializing database $dbPath...");
-    _db = await openDatabase(
-      join(await getDatabasesPath(), "local_db"),
-      version: 1,
-      onCreate: (db, version) {
-        initCommands(db);
-      },
-    );
+    _db =
+        await openDatabase(join(await getDatabasesPath(), "my_db"), version: 1);
     print("Database initialized: $_db");
   }
 
@@ -79,17 +62,5 @@ class EventRepoLocal implements EventRepository {
       whereArgs: [eventId],
     );
     print("Updated private flag for event $eventId to ${isPrivate ? 1 : 0}");
-  }
-
-  Future<void> eraseAll() async {
-    // Drop all tables
-    await _db.execute('DROP TABLE IF EXISTS events');
-    await _db.execute('DROP TABLE IF EXISTS events');
-    await _db.execute('DROP TABLE IF EXISTS gifts');
-    await _db.execute('DROP TABLE IF EXISTS friends');
-    print("Deleted old DBs");
-
-    // Recreate the tables
-    await initCommands(_db);
   }
 }

@@ -3,6 +3,7 @@ import 'package:hedeyety/features/events/data/datasources/event_repo_remote.dart
 
 import '../../../events/data/datasources/event_repo_local.dart';
 import '../../../events/data/models/event_model.dart';
+import 'my_event_details.dart';
 
 class MyEventsScreen extends StatefulWidget {
   @override
@@ -47,7 +48,15 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               final event = events[index];
               return Card(
                 child: ListTile(
-                  onTap: () {},
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MyEventDetailsScreen(event: event),
+                      ),
+                    );
+                  },
                   title: Text(event.name),
                   subtitle: Text(event.location),
                   trailing: Checkbox(

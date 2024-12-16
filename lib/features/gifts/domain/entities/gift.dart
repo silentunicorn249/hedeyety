@@ -1,18 +1,18 @@
-class Gift {
+class GiftEntity {
   String id;
   String name;
   String description;
-  String? category;
-  double? price;
+  String category;
+  double price;
   bool isPledged;
-  int eventId;
+  String eventId;
 
-  Gift({
+  GiftEntity({
     required this.id,
     required this.name,
     required this.description,
-    this.category,
-    this.price,
+    required this.category,
+    required this.price,
     required this.isPledged,
     required this.eventId,
   });

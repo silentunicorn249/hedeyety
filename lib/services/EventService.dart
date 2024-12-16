@@ -8,7 +8,7 @@ class EventService {
       title: 'Alice\'s Birthday',
       date: '2024-12-25',
       gifts: [
-        Gift(
+        GiftEntity(
             id: '1',
             name: 'Smartphone',
             description: 'iPhone',
@@ -20,7 +20,7 @@ class EventService {
       title: 'Bob\'s Wedding',
       date: '2025-01-10',
       gifts: [
-        Gift(
+        GiftEntity(
             id: '2',
             name: 'Flutter Book',
             description: 'Learn Dart & Flutter',

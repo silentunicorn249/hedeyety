@@ -1,36 +1,72 @@
 import 'package:flutter/material.dart';
 
 class AddGiftScreen extends StatelessWidget {
+  final String eventId;
+
+  const AddGiftScreen({Key? key, required this.eventId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-        top: 16.0,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController categoryController = TextEditingController();
+    final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController priceController = TextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Add Gift"),
       ),
-      child: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              decoration: InputDecoration(labelText: 'Gift Name'),
-              // onChanged: (value) => giftName = value,
+              controller: nameController,
+              decoration: const InputDecoration(labelText: "Gift Name"),
             ),
             TextField(
-              decoration: InputDecoration(labelText: 'Description'),
-              // onChanged: (value) => giftDescription = value,
+              controller: categoryController,
+              decoration: const InputDecoration(labelText: "Category"),
             ),
-            SizedBox(height: 10),
+            TextField(
+              controller: descriptionController,
+              decoration: const InputDecoration(labelText: "Description"),
+            ),
+            TextField(
+              controller: priceController,
+              decoration: const InputDecoration(labelText: "Price"),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // setState(() {
-                //   gifts.add(Gift(name: name, description: description, category: 'Misc'));
-                // });
-                Navigator.pop(context);
+                // Capture the input values
+                final name = nameController.text.trim();
+                final category = categoryController.text.trim();
+                final description = descriptionController.text.trim();
+                final price = double.tryParse(priceController.text.trim());
+
+                if (name.isEmpty ||
+                    category.isEmpty ||
+                    description.isEmpty ||
+                    price == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Please fill all fields correctly")),
+                  );
+                  return;
+                }
+
+                // Pop and send the gift data back
+                Navigator.pop(context, {
+                  "name": name,
+                  "category": category,
+                  "description": description,
+                  "price": price,
+                  "eventId": eventId,
+                });
               },
-              child: Text('Add Gift'),
+              child: const Text("Add Gift"),
             ),
           ],
         ),

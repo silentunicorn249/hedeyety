@@ -61,4 +61,9 @@ class FriendsProvider with ChangeNotifier {
         .removeWhere((user) => user.id == userId); // Remove from local list
     notifyListeners();
   }
+
+  eraseAll() {
+    _profiles.clear();
+    notifyListeners();
+  }
 }

@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/core/constants/dummy_data.dart';
-
-import '../../../auth/domain/entities/user.dart';
 
 class PledgedGiftsScreen extends StatelessWidget {
-  UserEntity person = DummyData.users[0];
-
   @override
   Widget build(BuildContext context) {
-    final pledgedGifts = DummyData.gifts;
+    final pledgedGifts = [];
 
     return Scaffold(
       appBar: AppBar(
