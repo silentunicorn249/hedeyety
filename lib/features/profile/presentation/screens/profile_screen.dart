@@ -12,7 +12,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Load the saved theme from SharedPreferences and set it in the ThemeProvider
   Future<UserModel?> _loadProfile() async {
     final repo = UserRepoRemote();
-    return await repo.getUser(_auth.currentUser!.uid);
+    return await repo.getUser(userId);
   }
 
   @override
@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundImage: AssetImage('images/logo.jpg'),
                     ),
                     ListTile(
-                      title: Text('${userData.name}'),
+                      title: Text('${userData.name} ${userData.email}'),
                       subtitle: const Text('Edit Profile Info'),
                       onTap: () {
                         // Edit profile logic

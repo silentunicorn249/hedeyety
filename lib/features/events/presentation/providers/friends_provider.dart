@@ -30,13 +30,13 @@ class FriendsProvider with ChangeNotifier {
 
     try {
       debugPrint("FriendsProvider fetch");
-      final remote_friends = await _remote_repo.getALlFriends();
-      if (remote_friends.length > 0) {
-        print(remote_friends.first.friendId);
-        print(remote_friends.first.userId);
-      }
+      // final remoteFriends = await _remote_repo.getALlFriends();
+      // if (remoteFriends.length > 0) {
+      //   print(remoteFriends.first.friendId);
+      //   print(remoteFriends.first.userId);
+      // }
       _profiles = await _local_repo.getALlUsers();
-      print(profiles.first?.email);
+      print(profiles.first.email);
     } catch (e) {
       // Handle errors, optionally log them
       debugPrint('Error fetching profiles: $e');

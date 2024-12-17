@@ -9,7 +9,7 @@ class GiftDetailsScreen extends StatefulWidget {
       description: "description",
       category: "category",
       price: 123,
-      isPledged: true,
+      pledgedId: true,
       eventId: "eventId");
 
   @override
@@ -22,7 +22,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    isPledged = widget.gift.isPledged!;
+    isPledged = widget.gift.pledgedId!;
     print(widget.gift);
   }
 
@@ -30,7 +30,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
     print(widget.gift.price);
     setState(() {
       isPledged = !isPledged;
-      widget.gift.isPledged = isPledged;
+      widget.gift.pledgedId = isPledged;
     });
   }
 

@@ -7,7 +7,7 @@ class GiftModel extends GiftEntity {
     required super.category,
     required super.description,
     required super.price,
-    required super.isPledged,
+    required super.pledgedId,
     required super.eventId,
   });
 
@@ -18,7 +18,7 @@ class GiftModel extends GiftEntity {
         'category': category,
         'description': description,
         'price': price,
-        'isPledged': isPledged ? 1 : 0,
+        'pledgedId': pledgedId,
         'eventId': eventId, // Store as 0 or 1 in SQLite
       };
 
@@ -28,7 +28,7 @@ class GiftModel extends GiftEntity {
         category: json['category'],
         description: json['description'],
         price: json['price'],
-        isPledged: json['isPledged'] == 1,
+        pledgedId: json['pledgedId'],
         eventId: json['eventId'], // Convert 0 or 1 to bool
       );
 }

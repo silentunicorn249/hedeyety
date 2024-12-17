@@ -4,7 +4,7 @@ class GiftEntity {
   String description;
   String category;
   double price;
-  bool isPledged;
+  String pledgedId;
   String eventId;
 
   GiftEntity({
@@ -13,7 +13,7 @@ class GiftEntity {
     required this.description,
     required this.category,
     required this.price,
-    required this.isPledged,
+    required this.pledgedId,
     required this.eventId,
   });
 
@@ -24,7 +24,7 @@ class GiftEntity {
       'description': description,
       'category': category,
       'price': price,
-      'status': isPledged,
+      'pledgedId': pledgedId,
       'event_id': eventId,
     };
   }

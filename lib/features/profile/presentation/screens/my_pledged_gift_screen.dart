@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../gifts/data/datasources/gift_repo_remote.dart';
@@ -11,14 +12,11 @@ class PledgedGiftsScreen extends StatefulWidget {
 }
 
 class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
-  late Future<List<GiftModel>> _pledgedGiftsFuture;
   final GiftRepoRemote _giftRepoRemote = GiftRepoRemote();
 
   @override
   void initState() {
     super.initState();
-    _pledgedGiftsFuture =
-        _giftRepoRemote.getAllPledgedGifts(); // Fetch pledged gifts
   }
 
   Widget _buildGiftCard(GiftModel gift) {
@@ -44,9 +42,10 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  gift.isPledged ? "Pledged: ✅" : "Pledged: ❌",
+                  gift.pledgedId.isNotEmpty ? "Pledged: ✅" : "Pledged: ❌",
                   style: TextStyle(
-                      color: gift.isPledged ? Colors.green : Colors.red,
+                      color:
+                          gift.pledgedId.isNotEmpty ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold),
                 ),
               ],
@@ -64,7 +63,7 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
         title: const Text('Pledged Gifts'),
       ),
       body: FutureBuilder<List<GiftModel>>(
-        future: _pledgedGiftsFuture,
+        future: _giftRepoRemote.getAllPledgedGifts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -79,7 +78,10 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
             );
           } else {
             final pledgedGifts = snapshot.data!
-                .where((gift) => gift.isPledged) // Filter pledged gifts
+                .where((gift) =>
+                    gift.pledgedId ==
+                    FirebaseAuth
+                        .instance.currentUser!.uid) // Filter pledged gifts
                 .toList();
             return ListView.builder(
               itemCount: pledgedGifts.length,

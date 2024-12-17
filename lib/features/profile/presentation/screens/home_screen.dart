@@ -45,8 +45,8 @@ class HomeScreen extends StatelessWidget {
     await _repo.eraseAll();
     final friendsProvider =
         Provider.of<FriendsProvider>(context, listen: false);
-    friendsProvider.eraseAll();
-    FirebaseAuth.instance.signOut();
+    await friendsProvider.eraseAll();
+    await FirebaseAuth.instance.signOut();
     Navigator.popAndPushNamed(context, AppRoutes.welcome);
   }
 

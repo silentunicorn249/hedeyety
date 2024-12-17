@@ -44,7 +44,7 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
         category: newGiftData["category"],
         description: newGiftData["description"],
         price: newGiftData["price"],
-        isPledged: false,
+        pledgedId: "",
         eventId: newGiftData["eventId"],
       );
 
@@ -71,7 +71,7 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
         category: updatedGiftData["category"],
         description: updatedGiftData["description"],
         price: updatedGiftData["price"],
-        isPledged: gift.isPledged,
+        pledgedId: gift.pledgedId,
         // Keep pledge status the same
         eventId: updatedGiftData["eventId"],
       );
@@ -86,6 +86,8 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
 
   Widget _buildGiftCard(GiftModel gift) {
     bool isCreator = widget.currentUserId == widget.event.userId;
+    bool isPledged = gift.pledgedId.isNotEmpty;
+    bool isPledgedByCurrentUser = gift.pledgedId == widget.currentUserId;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -109,35 +111,53 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  gift.isPledged ? "Pledged: ✅" : "Pledged: ❌",
+                  isPledged ? "Pledged: ✅" : "Pledged: ❌",
                   style: TextStyle(
-                      color: gift.isPledged ? Colors.green : Colors.red,
+                      color: isPledged ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold),
                 ),
-                if (!gift.isPledged && isCreator)
-                  // Show "Edit" button if creator and gift is not pledged
+                if (!isCreator) // Only non-owners can pledge/unpledge
                   ElevatedButton.icon(
-                    onPressed: () => _editGift(gift),
-                    icon: const Icon(Icons.edit),
-                    label: const Text("Edit"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                  )
-                else if (!isCreator)
-                  // Show "Pledge" button if not the creator
-                  ElevatedButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
+                      if (!isPledged) {
+                        // User pledges the gift
+                        await _giftRepoRemote.updateGiftPledgedStatus(
+                            gift.id, widget.currentUserId);
+                      } else if (isPledgedByCurrentUser) {
+                        // User unpledges the gift
+                        await _giftRepoRemote.updateGiftPledgedStatus(
+                            gift.id, "");
+                      } else {
+                        // Show message if another user has pledged
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("This gift is already pledged."),
+                          ),
+                        );
+                        return;
+                      }
+
                       setState(() {
-                        gift.isPledged = !gift.isPledged;
-                        _giftRepoRemote.saveGift(gift); // Save updated status
+                        _giftsFuture =
+                            _giftRepoRemote.getAllGiftsByEvent(widget.event.id);
                       });
                     },
-                    icon: Icon(gift.isPledged ? Icons.undo : Icons.done),
-                    label: Text(gift.isPledged ? "Unpledge" : "Pledge"),
+                    icon: Icon(isPledgedByCurrentUser
+                        ? Icons.undo
+                        : isPledged
+                            ? Icons.ac_unit_outlined
+                            : Icons.check_circle),
+                    label: Text(isPledgedByCurrentUser
+                        ? "Unpledge"
+                        : isPledged
+                            ? "Already Pledged"
+                            : "Pledge"),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          gift.isPledged ? Colors.red : Colors.green,
+                      backgroundColor: isPledgedByCurrentUser
+                          ? Colors.red
+                          : isPledged
+                              ? Colors.grey[600]
+                              : Colors.green,
                     ),
                   ),
               ],
@@ -173,9 +193,9 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                 Text("Date: ${widget.event.date}"),
                 Text("Location: ${widget.event.location}"),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   "Description:",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(widget.event.desc),
               ],

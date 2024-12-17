@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../domain/repositories/gift_repository.dart';
 import '../models/gift_model.dart';
 
 class GiftRepoRemote implements GiftRepository {
   static final GiftRepoRemote _instance = GiftRepoRemote._();
+  final userId = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String GIFT_COLLECTION_NAME = "gifts";
 
@@ -58,11 +61,18 @@ class GiftRepoRemote implements GiftRepository {
       // For the purpose of this example, assume we have a remote API or Firebase query to get the gifts
 
       final gifts = await getAllGifts(); // Placeholder for the actual API call
-      return gifts
-          .where((gift) => gift.isPledged)
-          .toList(); // Only return pledged gifts
+      return gifts.where((gift) {
+        debugPrint("${gift.name}:  ${gift.pledgedId} > ${userId}");
+        return gift.pledgedId == userId;
+      }).toList(); // Only return pledged gifts
     } catch (e) {
       throw Exception('Failed to load pledged gifts: $e');
     }
+  }
+
+  Future<void> updateGiftPledgedStatus(String giftId, String pledgedId) async {
+    await _firestore.collection(GIFT_COLLECTION_NAME).doc(giftId).update({
+      'pledgedId': pledgedId,
+    });
   }
 }

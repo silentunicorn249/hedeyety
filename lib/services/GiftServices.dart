@@ -23,6 +23,6 @@ class GiftService {
   // Simulate toggling gift status
   Future<void> toggleGiftStatus(String id) async {
     var gift = _dummyGifts.firstWhere((g) => g.id == id);
-    gift.isPledged = !gift.isPledged;
+    gift.pledgedId = !gift.pledgedId;
   }
 }
