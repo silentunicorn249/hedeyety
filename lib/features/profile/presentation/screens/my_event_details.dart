@@ -122,11 +122,19 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                       if (!isPledged) {
                         // User pledges the gift
                         await _giftRepoRemote.updateGiftPledgedStatus(
-                            gift.id, widget.currentUserId);
+                            gift.id,
+                            widget.currentUserId,
+                            widget.event.userId,
+                            "Pledge",
+                            "Mabrouk!!! ${gift.name} hatgeelak");
                       } else if (isPledgedByCurrentUser) {
                         // User unpledges the gift
                         await _giftRepoRemote.updateGiftPledgedStatus(
-                            gift.id, "");
+                            gift.id,
+                            "",
+                            widget.event.userId,
+                            "Unpledge",
+                            "7ad rega3 fi kalamo, ${gift.name} too much y3ny");
                       } else {
                         // Show message if another user has pledged
                         ScaffoldMessenger.of(context).showSnackBar(

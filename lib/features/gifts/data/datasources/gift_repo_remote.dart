@@ -70,9 +70,24 @@ class GiftRepoRemote implements GiftRepository {
     }
   }
 
-  Future<void> updateGiftPledgedStatus(String giftId, String pledgedId) async {
+  Future<void> updateGiftPledgedStatus(String giftId, String pledgedId,
+      String giftOwnerId, String title, String message) async {
+    final notification = {
+      'title': title,
+      'body': message,
+    };
+
+    // Update the gift's pledged status
     await _firestore.collection(GIFT_COLLECTION_NAME).doc(giftId).update({
       'pledgedId': pledgedId,
     });
+
+    // Append the notification to the gift owner's notifications array
+    final notificationsRef =
+        _firestore.collection('notifications').doc(giftOwnerId);
+
+    await notificationsRef.set({
+      'notifications': FieldValue.arrayUnion([notification]),
+    }, SetOptions(merge: true));
   }
 }
