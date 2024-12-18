@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../events/presentation/providers/friends_provider.dart';
 import '../../../profile/data/datasources/friends_repo_remote.dart';
 import '../widgets/main_button.dart';
+import '../widgets/main_textinput.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "login_screen";
@@ -80,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: ModalProgressHUD(
         inAsyncCall: showSpin,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -91,26 +92,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Image.asset('images/logo.jpg'),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 48.0,
               ),
               MainTextInput(
-                onChange: (value) {
-                  email = value;
-                },
                 hintText: "Enter your email",
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) => email = value,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8.0,
               ),
               MainTextInput(
-                onChange: (value) {
-                  password = value;
-                },
                 hintText: "Enter your password",
-                hidden: true,
+                isObscure: true,
+                onChanged: (value) => password = value,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24.0,
               ),
               MainButton(
@@ -128,44 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MainTextInput extends StatelessWidget {
-  late ValueChanged<String> onChange;
-  late String hintText;
-  bool hidden = false;
-
-  MainTextInput({
-    required this.onChange,
-    required this.hintText,
-    this.hidden = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      obscureText: hidden,
-      keyboardType: TextInputType.emailAddress,
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.black),
-      onChanged: onChange,
-      decoration: InputDecoration(
-        hintText: hintText,
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
         ),
       ),
     );

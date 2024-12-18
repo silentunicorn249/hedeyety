@@ -6,6 +6,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../../../../core/routes/routes.dart';
 import '../../data/models/user_model.dart';
 import '../widgets/main_button.dart';
+import '../widgets/main_textinput.dart';
 
 class SignupScreen extends StatefulWidget {
   static String id = "register_screen";
@@ -83,142 +84,42 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 48.0,
-              ),
-              TextField(
+              const SizedBox(height: 48.0),
+              MainTextInput(
+                hintText: "Enter your email",
                 keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
-                onChanged: (value) {
-                  //Do something with the user input.
-                  email = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
+                onChanged: (value) => email = value,
               ),
-              const SizedBox(
-                height: 8.0,
+              const SizedBox(height: 8.0),
+              MainTextInput(
+                hintText: "Enter your name",
+                onChanged: (value) => name = value,
               ),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
-                onChanged: (value) {
-                  //Do something with the user input.
-                  name = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your name',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
+              const SizedBox(height: 8.0),
+              MainTextInput(
+                hintText: "Enter your phone number",
+                keyboardType: TextInputType.phone,
+                onChanged: (value) => phoneNo = value,
               ),
-              SizedBox(
-                height: 8.0,
+              const SizedBox(height: 8.0),
+              MainTextInput(
+                hintText: "Enter your password",
+                isObscure: true,
+                onChanged: (value) => password = value,
               ),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
-                onChanged: (value) {
-                  //Do something with the user input.
-                  phoneNo = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your phonrNo',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                obscureText: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
-                onChanged: (value) {
-                  //Do something with the user input.
-                  password = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your password',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 24.0,
+              const SizedBox(height: 24.0),
+              MainButton(
+                clbFn: handleSignup,
+                color: Colors.blueAccent,
+                text: "Register",
               ),
               MainButton(
-                  clbFn:
-                      //Implement registration functionality.
-                      handleSignup,
-                  color: Colors.blueAccent,
-                  text: "Register"),
-              MainButton(
-                  clbFn: () {
-                    //Implement registration functionality.
-                    Navigator.pop(context);
-                  },
-                  color: Colors.blueGrey,
-                  text: "Go Back"),
+                clbFn: () {
+                  Navigator.pop(context);
+                },
+                color: Colors.blueGrey,
+                text: "Go Back",
+              ),
             ],
           ),
         ),
