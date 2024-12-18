@@ -1,76 +1,174 @@
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/gifts/data/models/gift_model.dart';
 
-import '../../domain/entities/gift.dart';
+class GiftDetailsScreen extends StatelessWidget {
+  final GiftModel gift;
 
-class GiftDetailsScreen extends StatefulWidget {
-  GiftEntity gift = GiftEntity(
-      id: "id",
-      name: "name",
-      description: "description",
-      category: "category",
-      price: 123,
-      pledgedId: "",
-      eventId: "eventId");
-
-  @override
-  _GiftDetailsScreenState createState() => _GiftDetailsScreenState();
-}
-
-class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
-  bool isPledged = false;
-
-  @override
-  void initState() {
-    super.initState();
-    isPledged = widget.gift.pledgedId!;
-    print(widget.gift);
-  }
-
-  void _togglePledgeStatus() {
-    print(widget.gift.price);
-    setState(() {
-      isPledged = !isPledged;
-      widget.gift.pledgedId = isPledged;
-    });
-  }
+  const GiftDetailsScreen({super.key, required this.gift});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.gift.name)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Stack(
+              children: [
+                // Curved Header Background
+                ClipPath(
+                  clipper: CurvedClipper(),
+                  child: Container(
+                    height: size.height * 0.35,
+                    width: size.width,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: size.width / 2 - 60,
+                  child: const CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      radius: 56,
+                      backgroundImage: AssetImage(
+                        'images/img.png', // Replace with actual asset path
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: size.height * 0.05),
+            // Gift Name
             Text(
-              'Description: ${widget.gift.description}',
-              style: TextStyle(fontSize: 18),
+              gift.name,
+              style: TextStyle(
+                fontSize: size.width * 0.06,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
-            Text(
-              'Category: ${widget.gift.category}',
-              style: TextStyle(fontSize: 18),
+            SizedBox(height: size.height * 0.02),
+            // Gift Details
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DetailTile(
+                    icon: Icons.category,
+                    label: 'Category',
+                    value: gift.category,
+                  ),
+                  DetailTile(
+                    icon: Icons.description,
+                    label: 'Description',
+                    value: gift.description,
+                  ),
+                  DetailTile(
+                    icon: Icons.price_check,
+                    label: 'Price',
+                    value: '\$${gift.price.toStringAsFixed(2)}',
+                  ),
+                  DetailTile(
+                    icon: Icons.emoji_people,
+                    label: 'Pledged',
+                    value: gift.pledgedId.isNotEmpty ? "✅ Yes" : "❌ No",
+                    valueColor:
+                        gift.pledgedId.isNotEmpty ? Colors.green : Colors.red,
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Price: ${widget.gift.price}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 20),
-            SwitchListTile(
-              title: Text('Pledged'),
-              value: isPledged,
-              onChanged: (value) => _togglePledgeStatus(),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Back to Gifts'),
+            SizedBox(height: size.height * 0.03),
+            // Back Button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(size.width * 0.8, 50),
+                ),
+                child: const Text('Back'),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+class DetailTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color? valueColor;
+
+  const DetailTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      child: Row(
+        children: [
+          Icon(icon, size: size.width * 0.06),
+          SizedBox(width: size.width * 0.04),
+          Expanded(
+            flex: 3,
+            child: Text(
+              '$label:',
+              style: TextStyle(
+                fontSize: size.width * 0.045,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: size.width * 0.045,
+                fontWeight: FontWeight.bold,
+                color: valueColor ?? Colors.black,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// CurvedClipper for the header
+class CurvedClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(0, size.height - 50);
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height - 50);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

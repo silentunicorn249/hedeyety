@@ -25,6 +25,7 @@ class ThemeProvider extends ChangeNotifier {
       _isDark = false; // default to light theme
     } else {
       _isDark = isDark == 1;
+      debugPrint("ThemeProvder: $isDark");
     }
 
     notifyListeners(); // Notify listeners so the UI updates
@@ -37,7 +38,7 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> setTheme(bool isDark) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("theme", _isDark ? 0 : 1);
+    await prefs.setInt("theme", _isDark ? 1 : 0);
     notifyListeners();
   }
 }

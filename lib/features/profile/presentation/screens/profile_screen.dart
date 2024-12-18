@@ -82,8 +82,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // User Email
                     Text(
                       userData.phoneNo ?? 'No Email',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(height: 7),
                     // User Email
