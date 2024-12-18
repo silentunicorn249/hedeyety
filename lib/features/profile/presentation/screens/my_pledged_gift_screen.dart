@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../gifts/data/datasources/gift_repo_remote.dart';
 import '../../../gifts/data/models/gift_model.dart';
+import '../../../gifts/presentation/widgets/gift_card.dart';
 
 class PledgedGiftsScreen extends StatefulWidget {
   const PledgedGiftsScreen({Key? key}) : super(key: key);
@@ -15,49 +16,9 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
   final GiftRepoRemote _giftRepoRemote = GiftRepoRemote();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  Widget _buildGiftCard(GiftModel gift) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              gift.name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text("Category: ${gift.category}"),
-            Text("Description: ${gift.description}"),
-            Text("Price: \$${gift.price.toStringAsFixed(2)}"),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  gift.pledgedId.isNotEmpty ? "Pledged: ✅" : "Pledged: ❌",
-                  style: TextStyle(
-                      color:
-                          gift.pledgedId.isNotEmpty ? Colors.green : Colors.red,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -80,14 +41,23 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
           } else {
             final pledgedGifts = snapshot.data!
                 .where((gift) =>
-                    gift.pledgedId ==
-                    FirebaseAuth
-                        .instance.currentUser!.uid) // Filter pledged gifts
+                    gift.pledgedId == currentUserId) // Filter pledged gifts
                 .toList();
+
             return ListView.builder(
               itemCount: pledgedGifts.length,
-              itemBuilder: (context, index) =>
-                  _buildGiftCard(pledgedGifts[index]),
+              itemBuilder: (context, index) {
+                final gift = pledgedGifts[index];
+                return GiftCard(
+                  gift: gift,
+                  isCreator: false,
+                  giftRepoRemote: _giftRepoRemote,
+                  onGiftUpdated: () {
+                    setState(
+                        () {}); // Refresh the list when pledge status changes
+                  },
+                );
+              },
             );
           }
         },

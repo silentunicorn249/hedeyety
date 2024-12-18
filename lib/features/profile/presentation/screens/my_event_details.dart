@@ -5,11 +5,11 @@ import 'package:hedeyety/features/gifts/data/datasources/gift_repo_remote.dart';
 import '../../../events/data/models/event_model.dart';
 import '../../../gifts/data/models/gift_model.dart';
 import '../../../gifts/presentation/screens/add_gift_Screen.dart';
+import '../../../gifts/presentation/widgets/gift_card.dart';
 
 class MyEventDetailsScreen extends StatefulWidget {
   final EventModel event;
-  final String currentUserId = FirebaseAuth
-      .instance.currentUser!.uid; // Add this parameter to pass current user ID
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   MyEventDetailsScreen({super.key, required this.event});
 
@@ -19,8 +19,6 @@ class MyEventDetailsScreen extends StatefulWidget {
 
 class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
   late Future<List<GiftModel>> _giftsFuture;
-
-  // final GiftRepoLocal _giftRepoLocal = GiftRepoLocal();
   final GiftRepoRemote _giftRepoRemote = GiftRepoRemote();
 
   @override
@@ -49,136 +47,20 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
       );
 
       await _giftRepoRemote.saveGift(newGift);
-
-      setState(() {
-        _giftsFuture = _giftRepoRemote.getAllGiftsByEvent(widget.event.id);
-      });
+      _reloadGifts();
     }
   }
 
-  void _editGift(GiftModel gift) async {
-    var updatedGiftData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AddGiftScreen(eventId: widget.event.id),
-      ),
-    );
-
-    if (updatedGiftData != null) {
-      final updatedGift = GiftModel(
-        id: gift.id,
-        name: updatedGiftData["name"],
-        category: updatedGiftData["category"],
-        description: updatedGiftData["description"],
-        price: updatedGiftData["price"],
-        pledgedId: gift.pledgedId,
-        // Keep pledge status the same
-        eventId: updatedGiftData["eventId"],
-      );
-
-      await _giftRepoRemote.saveGift(updatedGift);
-
-      setState(() {
-        _giftsFuture = _giftRepoRemote.getAllGiftsByEvent(widget.event.id);
-      });
-    }
-  }
-
-  Widget _buildGiftCard(GiftModel gift) {
-    bool isCreator = widget.currentUserId == widget.event.userId;
-    bool isPledged = gift.pledgedId.isNotEmpty;
-    bool isPledgedByCurrentUser = gift.pledgedId == widget.currentUserId;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              gift.name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text("Category: ${gift.category}"),
-            Text("Description: ${gift.description}"),
-            Text("Price: \$${gift.price.toStringAsFixed(2)}"),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  isPledged ? "Pledged: ✅" : "Pledged: ❌",
-                  style: TextStyle(
-                      color: isPledged ? Colors.green : Colors.red,
-                      fontWeight: FontWeight.bold),
-                ),
-                if (!isCreator) // Only non-owners can pledge/unpledge
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      if (!isPledged) {
-                        // User pledges the gift
-                        await _giftRepoRemote.updateGiftPledgedStatus(
-                            gift.id,
-                            widget.currentUserId,
-                            widget.event.userId,
-                            "Pledge",
-                            "Mabrouk!!! ${gift.name} hatgeelak");
-                      } else if (isPledgedByCurrentUser) {
-                        // User unpledges the gift
-                        await _giftRepoRemote.updateGiftPledgedStatus(
-                            gift.id,
-                            "",
-                            widget.event.userId,
-                            "Unpledge",
-                            "7ad rega3 fi kalamo, ${gift.name} too much y3ny");
-                      } else {
-                        // Show message if another user has pledged
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("This gift is already pledged."),
-                          ),
-                        );
-                        return;
-                      }
-
-                      setState(() {
-                        _giftsFuture =
-                            _giftRepoRemote.getAllGiftsByEvent(widget.event.id);
-                      });
-                    },
-                    icon: Icon(isPledgedByCurrentUser
-                        ? Icons.undo
-                        : isPledged
-                            ? Icons.ac_unit_outlined
-                            : Icons.check_circle),
-                    label: Text(isPledgedByCurrentUser
-                        ? "Unpledge"
-                        : isPledged
-                            ? "Already Pledged"
-                            : "Pledge"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isPledgedByCurrentUser
-                          ? Colors.red
-                          : isPledged
-                              ? Colors.grey[600]
-                              : Colors.green,
-                    ),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+  void _reloadGifts() {
+    setState(() {
+      _giftsFuture = _giftRepoRemote.getAllGiftsByEvent(widget.event.id);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     bool isCreator = widget.currentUserId == widget.event.userId;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.event.name),
@@ -231,8 +113,12 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                   final gifts = snapshot.data!;
                   return ListView.builder(
                     itemCount: gifts.length,
-                    itemBuilder: (context, index) =>
-                        _buildGiftCard(gifts[index]),
+                    itemBuilder: (context, index) => GiftCard(
+                      gift: gifts[index],
+                      isCreator: isCreator,
+                      giftRepoRemote: _giftRepoRemote,
+                      onGiftUpdated: _reloadGifts,
+                    ),
                   );
                 }
               },
@@ -252,8 +138,6 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                 ),
               ),
             ),
-
-          // Add gift button
         ],
       ),
     );

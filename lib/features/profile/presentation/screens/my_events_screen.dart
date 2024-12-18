@@ -27,18 +27,18 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Events"),
+        title: const Text("Events"),
         automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<EventModel>>(
         future: _eventsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error loading events"));
+            return const Center(child: Text("Error loading events"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("No events found"));
+            return const Center(child: Text("No events found"));
           }
 
           final events = snapshot.data!;
@@ -58,7 +58,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     );
                   },
                   title: Text(event.name),
-                  subtitle: Text(event.location),
+                  subtitle: Text("${event.location} - ${event.date}"),
                   trailing: Checkbox(
                     value: event.isPublic,
                     onChanged: (bool? newValue) async {

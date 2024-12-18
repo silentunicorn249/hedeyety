@@ -9,7 +9,7 @@ class GiftDetailsScreen extends StatefulWidget {
       description: "description",
       category: "category",
       price: 123,
-      pledgedId: true,
+      pledgedId: "",
       eventId: "eventId");
 
   @override
