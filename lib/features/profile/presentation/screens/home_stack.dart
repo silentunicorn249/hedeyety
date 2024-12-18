@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/profile/presentation/screens/my_events_screen.dart';
+import 'package:hedeyety/features/profile/presentation/screens/my_pledged_gift_screen.dart';
 
 import 'home_screen.dart';
-import 'profile_screen.dart';
 
 class HomeStack extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class _HomeStackState extends State<HomeStack> {
   final List<Widget> _screens = [
     HomeScreen(),
     MyEventsScreen(),
-    ProfileScreen(),
+    const PledgedGiftsScreen(),
   ];
 
   void _onTabTapped(int index) {
@@ -41,8 +41,8 @@ class _HomeStackState extends State<HomeStack> {
             label: 'Events',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.card_giftcard_sharp),
+            label: 'Pledged Gifts',
           ),
         ],
       ),

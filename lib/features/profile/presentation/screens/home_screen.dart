@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
 import 'package:hedeyety/features/profile/presentation/screens/add_friend_screen.dart';
+import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/routes/routes.dart';
@@ -98,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await _repo.eraseAll();
     final friendsProvider =
         Provider.of<FriendsProvider>(context, listen: false);
+    await Provider.of<ThemeProvider>(context, listen: false).setTheme(false);
     await friendsProvider.eraseAll();
     await FirebaseAuth.instance.signOut();
     Navigator.popAndPushNamed(context, AppRoutes.welcome);
@@ -109,9 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: const Icon(Icons.settings),
+          icon: const Icon(Icons.person),
           onPressed: () {
-            // add settings
+            Navigator.pushNamed(context, AppRoutes.profile);
           },
         ),
         title: const Text('Friends List'),

@@ -32,7 +32,10 @@ class ThemeProvider extends ChangeNotifier {
 
   // Toggle the theme and save the setting
   Future<void> toggleTheme() async {
-    _isDark = !_isDark;
+    setTheme(_isDark = !_isDark);
+  }
+
+  Future<void> setTheme(bool isDark) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt("theme", _isDark ? 0 : 1);
     notifyListeners();

@@ -60,6 +60,7 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Pledged Gifts'),
       ),
       body: FutureBuilder<List<GiftModel>>(
