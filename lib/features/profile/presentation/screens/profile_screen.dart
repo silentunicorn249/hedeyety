@@ -41,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return const Center(child: Text('No data available'));
               } else {
                 final userData = snapshot.data!;
-
                 return Column(
                   children: [
                     Stack(
@@ -64,8 +63,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundColor: Colors.white,
                             child: CircleAvatar(
                               radius: 56,
-                              backgroundImage: NetworkImage(
-                                  'https://robohash.org/${userData.id}'), // User image URL
+                              child: Image.network(
+                                'https://robohash.org/${userData.id}',
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.person,
+                                      size: 50); // Fallback if the image fails
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -104,9 +109,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Edit Profile Button
                     ElevatedButton(
                       onPressed: () {
-                        // Edit profile logic here
+                        Navigator.pop(context);
                       },
-                      child: const Text('Edit Profile'),
+                      child: const Text('Go Back'),
                     ),
                   ],
                 );
