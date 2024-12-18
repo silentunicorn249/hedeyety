@@ -3,11 +3,13 @@ import 'package:hedeyety/features/events/data/datasources/event_repo_remote.dart
 import 'package:hedeyety/features/events/data/models/event_model.dart';
 
 import '../../../profile/presentation/screens/my_event_details.dart';
+import '../widgets/event_tile.dart';
 
 class EventsListScreen extends StatelessWidget {
   final String userId;
   final String name;
   final remoteRepo = EventRepoRemote();
+
   EventsListScreen({required this.userId, required this.name});
 
   @override
@@ -27,15 +29,19 @@ class EventsListScreen extends StatelessWidget {
               itemCount: events.length,
               itemBuilder: (context, index) {
                 final event = events[index];
-                return ListTile(
-                  title: Text(event.name),
-                  subtitle: Text('Desc: ${event.date}'),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MyEventDetailsScreen(event: event),
-                    ),
-                  ),
+                return EventListTile(
+                  eventName: event.name,
+                  eventDate: event.date,
+                  onTap: () {
+                    // Navigate to event details screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MyEventDetailsScreen(event: event),
+                      ),
+                    );
+                  },
                 );
               },
             );

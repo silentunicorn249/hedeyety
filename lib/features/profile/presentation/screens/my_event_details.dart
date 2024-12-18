@@ -70,27 +70,84 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
           // Event details
           Container(
             padding: const EdgeInsets.all(16),
-            color: Colors.blueGrey[50],
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.event.name,
-                  style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.bold),
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Event Name with Bold Style and Large Font
+                    Text(
+                      widget.event.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent, // Adding color for the title
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Date and Location with Icons for better visibility
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          color: Colors.grey.shade600,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "Date: ${widget.event.date}",
+                          style: TextStyle(
+                              fontSize: 16, color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.grey.shade600,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "Location: ${widget.event.location}",
+                          style: TextStyle(
+                              fontSize: 16, color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Description with improved styling
+                    const Text(
+                      "Description:",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.event.desc,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text("Date: ${widget.event.date}"),
-                Text("Location: ${widget.event.location}"),
-                const SizedBox(height: 8),
-                const Text(
-                  "Description:",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(widget.event.desc),
-              ],
+              ),
             ),
           ),
+
           const SizedBox(height: 8),
 
           // Gifts list
@@ -135,6 +192,8 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: Colors.blue,
+                  minimumSize: const Size(120,
+                      50), // This will increase the width to fill the available space
                 ),
               ),
             ),

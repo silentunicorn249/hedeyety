@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hedeyety/features/events/data/datasources/event_repo_remote.dart';
 
 import '../../../events/data/datasources/event_repo_local.dart';
 import '../../../events/data/models/event_model.dart';
+import '../../../events/presentation/widgets/event_tile.dart';
 import 'my_event_details.dart';
 
 class MyEventsScreen extends StatefulWidget {
@@ -46,33 +46,17 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             itemCount: events.length,
             itemBuilder: (context, index) {
               final event = events[index];
-              return Card(
-                child: ListTile(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MyEventDetailsScreen(event: event),
-                      ),
-                    );
-                  },
-                  title: Text(event.name),
-                  subtitle: Text("${event.location} - ${event.date}"),
-                  trailing: Checkbox(
-                    value: event.isPublic,
-                    onChanged: (bool? newValue) async {
-                      if (newValue!) {
-                        await EventRepoLocal()
-                            .updateEventPrivateFlag(event.id, newValue);
-                        await EventRepoRemote().saveEvent(event);
-                        setState(() {
-                          event.isPublic = newValue;
-                        });
-                      }
-                    },
-                  ),
-                ),
+              return EventListTile(
+                eventName: event.name,
+                eventDate: event.date,
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyEventDetailsScreen(event: event),
+                    ),
+                  );
+                },
               );
             },
           );

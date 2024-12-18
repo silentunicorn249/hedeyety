@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../auth/data/datasources/user_repo_local.dart';
 import '../../../events/presentation/providers/friends_provider.dart';
-import '../../../events/presentation/screens/events_list_screen.dart';
+import '../widgets/friend_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -154,24 +154,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     final person = profileProvider.profiles[index];
                     debugPrint("Dodged a bullet ${person.email}");
 
-                    return ListTile(
-                      leading: const CircleAvatar(),
-                      title: Text(person.name),
-                      subtitle: Text('Email: ${person.email}'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          profileProvider.deleteUser(person.id);
-                        },
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventsListScreen(
-                                userId: person.id, name: person.name),
-                          ),
-                        );
+                    return FriendTile(
+                      person: person,
+                      onDelete: () {
+                        profileProvider.deleteUser(person.id);
                       },
                     );
                   },
