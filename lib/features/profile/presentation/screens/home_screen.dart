@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
-import 'package:hedeyety/features/profile/presentation/screens/add_friend_screen.dart';
-import 'package:hedeyety/providers/ThemeProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/routes/routes.dart';
+import '../../../../providers/ThemeProvider.dart';
 import '../../../auth/data/datasources/user_repo_local.dart';
+import '../../../auth/domain/entities/user.dart';
 import '../../../events/presentation/providers/friends_provider.dart';
+import '../../../events/presentation/screens/add_event_screen.dart';
 import '../widgets/friend_tile.dart';
+import 'add_friend_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final _repo = UserRepoLocal();
 
   late Stream<DocumentSnapshot<Map<String, dynamic>>> _notificationsStream;
+
+  String _searchQuery = "";
+  late List<UserEntity> _filteredProfiles = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -109,6 +114,17 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.popAndPushNamed(context, AppRoutes.welcome);
   }
 
+  void _updateSearch(String query, FriendsProvider profileProvider) {
+    setState(() {
+      _searchQuery = query.toLowerCase();
+      _filteredProfiles = profileProvider.profiles.where((user) {
+        return user.name.toLowerCase().contains(_searchQuery) ||
+            user.email.toLowerCase().contains(_searchQuery) ||
+            user.phoneNo.toLowerCase().contains(_searchQuery);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,11 +156,35 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
+          // Search Bar
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              key: const Key("searchBar"),
+              controller: _searchController,
+              onChanged: (value) {
+                final profileProvider =
+                    Provider.of<FriendsProvider>(context, listen: false);
+                _updateSearch(value, profileProvider);
+              },
+              decoration: InputDecoration(
+                labelText: 'Search friends...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+
+          // Add Event Button
           MaterialButton(
             key: Key("addEventButt"),
             onPressed: () => addEventModal(context),
             child: const Text("Add Event"),
           ),
+
+          // Friends List
           Expanded(
             child: Consumer<FriendsProvider>(
               builder: (context, profileProvider, child) {
@@ -152,14 +192,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (profileProvider.profiles.isEmpty) {
+                final profilesToShow = _searchQuery.isEmpty
+                    ? profileProvider.profiles
+                    : _filteredProfiles;
+
+                if (profilesToShow.isEmpty) {
                   return const Center(child: Text('No Friends available yet.'));
                 }
 
                 return ListView.builder(
-                  itemCount: profileProvider.profiles.length,
+                  itemCount: profilesToShow.length,
                   itemBuilder: (context, index) {
-                    final person = profileProvider.profiles[index];
+                    final person = profilesToShow[index];
                     debugPrint("Dodged a bullet ${person.email}");
 
                     return FriendTile(

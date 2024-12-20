@@ -8,12 +8,12 @@ class EventListTile extends StatelessWidget {
   final VoidCallback onTap;
 
   EventListTile({
-    Key? key,
+    super.key,
     this.isPublic = true,
     required this.eventName,
     required this.eventDate,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

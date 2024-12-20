@@ -14,6 +14,11 @@ class MyEventsScreen extends StatefulWidget {
 
 class _MyEventsScreenState extends State<MyEventsScreen> {
   late Future<List<EventModel>> _eventsFuture;
+  late List<EventModel> _allEvents = [];
+  late List<EventModel> _filteredEvents = [];
+
+  String _sortCriteria = "Date";
+  String _filterLocation = "";
 
   @override
   void initState() {
@@ -21,8 +26,35 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
     _loadEvents();
   }
 
-  void _loadEvents() {
-    _eventsFuture = EventRepoLocal().getALlEvents();
+  void _loadEvents() async {
+    final events = await EventRepoLocal().getALlEvents();
+    setState(() {
+      _allEvents = events;
+      _filteredEvents = events;
+    });
+  }
+
+  void _sortEvents(String criteria) {
+    setState(() {
+      _sortCriteria = criteria;
+      _filteredEvents.sort((a, b) {
+        if (criteria == "Date") {
+          return a.date.compareTo(b.date);
+        } else if (criteria == "Name") {
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        }
+        return 0;
+      });
+    });
+  }
+
+  void _filterEvents(String location) {
+    setState(() {
+      _filterLocation = location.toLowerCase();
+      _filteredEvents = _allEvents.where((event) {
+        return event.location.toLowerCase().contains(_filterLocation);
+      }).toList();
+    });
   }
 
   @override
@@ -32,38 +64,74 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
         title: const Text("Events"),
         automaticallyImplyLeading: false,
       ),
-      body: FutureBuilder<List<EventModel>>(
-        future: _eventsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text("Error loading events"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No events found"));
-          }
-
-          final events = snapshot.data!;
-          return ListView.builder(
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              final event = events[index];
-              return EventListTile(
-                eventName: event.name,
-                eventDate: event.date,
-                isPublic: event.isPublic,
-                onTap: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MyEventDetailsScreen(event: event),
+      body: Column(
+        children: [
+          // Sorting and Filtering Controls
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                // Sort Dropdown
+                Expanded(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: _sortCriteria,
+                    items: ["Date", "Name"]
+                        .map((criteria) => DropdownMenuItem(
+                              value: criteria,
+                              child: Text("Sort by $criteria"),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        _sortEvents(value);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Filter by Location
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: "Filter by Location",
+                      border: OutlineInputBorder(),
                     ),
-                  );
-                },
-              );
-            },
-          );
-        },
+                    onChanged: (value) {
+                      _filterEvents(value);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Event List
+          Expanded(
+            child: _filteredEvents.isEmpty
+                ? const Center(child: Text("No events found"))
+                : ListView.builder(
+                    itemCount: _filteredEvents.length,
+                    itemBuilder: (context, index) {
+                      final event = _filteredEvents[index];
+                      return EventListTile(
+                        eventName: event.name,
+                        eventDate: event.date,
+                        isPublic: event.isPublic,
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MyEventDetailsScreen(event: event),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
