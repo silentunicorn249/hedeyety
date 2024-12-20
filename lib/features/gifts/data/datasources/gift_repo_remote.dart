@@ -22,10 +22,12 @@ class GiftRepoRemote implements GiftRepository {
 
   @override
   Future<void> saveGift(GiftModel gift) async {
+    debugPrint("Saving gift remotely");
     await _firestore
         .collection(GIFT_COLLECTION_NAME)
         .doc(gift.id)
         .set(gift.toJson());
+    debugPrint("Saveddd");
   }
 
   @override

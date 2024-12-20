@@ -29,16 +29,22 @@ class GiftDetailsScreen extends StatelessWidget {
                 Positioned(
                   bottom: 0,
                   left: size.width / 2 - 60,
-                  child: const CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 56,
-                      backgroundImage: AssetImage(
-                        'images/img.png', // Replace with actual asset path
-                      ),
-                    ),
-                  ),
+                  child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Color(0x00),
+                        child: gift.imageUrl != null
+                            ? Image.network(
+                                gift.imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset("images/img.png");
+                                },
+                              )
+                            : Image.asset("images/img.png"),
+                      )),
                 ),
               ],
             ),

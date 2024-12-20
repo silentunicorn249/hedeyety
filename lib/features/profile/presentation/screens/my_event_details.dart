@@ -148,7 +148,6 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
       body: Column(
         children: [
           // Event details
-          // Event details
           Container(
             padding: const EdgeInsets.all(16),
             child: Card(
@@ -217,21 +216,27 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                     const SizedBox(height: 16),
 
                     // Description with improved styling
-                    const Text(
-                      "Description:",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.event.desc,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                      ),
+                    Row(
+                      children: [
+                        const Text(
+                          "Description:",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 26,
+                        ),
+                        Text(
+                          widget.event.desc,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
 
@@ -289,7 +294,7 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 3),
 
           // Gifts list
           Expanded(

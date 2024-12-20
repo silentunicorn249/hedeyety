@@ -6,7 +6,7 @@ class GiftEntity {
   double price;
   String pledgedId;
   String eventId;
-  String imageUrl;
+  String? imageUrl;
 
   GiftEntity({
     required this.id,
@@ -16,7 +16,7 @@ class GiftEntity {
     required this.price,
     required this.pledgedId,
     required this.eventId,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   Map<String, dynamic> toMap() {
