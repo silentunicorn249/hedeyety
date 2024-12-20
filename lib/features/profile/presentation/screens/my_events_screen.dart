@@ -119,13 +119,19 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                         eventDate: event.date,
                         isPublic: event.isPublic,
                         onTap: () async {
-                          await Navigator.push(
+                          // Navigate to MyEventDetailsScreen and wait for a result
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
                                   MyEventDetailsScreen(event: event),
                             ),
                           );
+
+                          // If the result indicates an update, reload the events
+                          if (result == true) {
+                            _loadEvents();
+                          }
                         },
                       );
                     },

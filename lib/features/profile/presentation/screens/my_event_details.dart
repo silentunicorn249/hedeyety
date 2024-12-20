@@ -266,13 +266,20 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                               value: widget.event.isPublic,
                               onChanged: (bool? newValue) async {
                                 if (newValue!) {
+                                  // Update the event's public status in the local and remote repos
                                   await EventRepoLocal().updateEventPrivateFlag(
                                       widget.event.id, newValue);
                                   await EventRepoRemote()
                                       .saveEvent(widget.event);
+
+                                  // Update the event locally and inform the parent screen
                                   setState(() {
                                     widget.event.isPublic = newValue;
                                   });
+
+                                  // Return true to indicate an update has occurred
+                                  if (context.mounted)
+                                    Navigator.pop(context, true);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
