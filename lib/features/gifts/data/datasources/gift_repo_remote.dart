@@ -6,14 +6,9 @@ import '../../domain/repositories/gift_repository.dart';
 import '../models/gift_model.dart';
 
 class GiftRepoRemote implements GiftRepository {
-  static final GiftRepoRemote _instance = GiftRepoRemote._();
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String GIFT_COLLECTION_NAME = "gifts";
-
-  GiftRepoRemote._();
-
-  factory GiftRepoRemote() => _instance;
 
   @override
   Future<void> initialize(String dbPath) async {

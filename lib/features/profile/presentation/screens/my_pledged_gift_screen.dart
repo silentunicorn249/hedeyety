@@ -39,10 +39,7 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
               ),
             );
           } else {
-            final pledgedGifts = snapshot.data!
-                .where((gift) =>
-                    gift.pledgedId == currentUserId) // Filter pledged gifts
-                .toList();
+            final pledgedGifts = snapshot.data!;
 
             return ListView.builder(
               itemCount: pledgedGifts.length,
