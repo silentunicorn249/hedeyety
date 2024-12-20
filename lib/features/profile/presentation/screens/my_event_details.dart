@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
 import 'package:hedeyety/features/gifts/data/datasources/gift_repo_remote.dart';
 
+import '../../../events/data/datasources/event_repo_local.dart';
+import '../../../events/data/datasources/event_repo_remote.dart';
 import '../../../events/data/models/event_model.dart';
 import '../../../gifts/data/models/gift_model.dart';
 import '../../../gifts/presentation/screens/add_gift_Screen.dart';
@@ -57,6 +60,20 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
     });
   }
 
+  void _openEditEventModal() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) => SingleChildScrollView(
+        child: Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: AddEventScreen(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isCreator = widget.currentUserId == widget.event.userId;
@@ -67,6 +84,7 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
       ),
       body: Column(
         children: [
+          // Event details
           // Event details
           Container(
             padding: const EdgeInsets.all(16),
@@ -81,13 +99,23 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Event Name with Bold Style and Large Font
-                    Text(
-                      widget.event.name,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent, // Adding color for the title
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.event.name,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color:
+                                Colors.blueAccent, // Adding color for the title
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: _openEditEventModal,
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
 
@@ -142,6 +170,56 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                         color: Colors.black87,
                       ),
                     ),
+                    const SizedBox(height: 16),
+
+                    // Status marker and toggle
+                    Row(
+                      children: [
+                        // Status marker
+                        Text(
+                          widget.event.isPublic
+                              ? "Public Event"
+                              : "Private Event",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: widget.event.isPublic
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                        const Spacer(),
+
+                        // Checkbox
+                        Row(
+                          children: [
+                            const Text("Public"),
+                            Checkbox(
+                              value: widget.event.isPublic,
+                              onChanged: (bool? newValue) async {
+                                if (newValue!) {
+                                  await EventRepoLocal().updateEventPrivateFlag(
+                                      widget.event.id, newValue);
+                                  await EventRepoRemote()
+                                      .saveEvent(widget.event);
+                                  setState(() {
+                                    widget.event.isPublic = newValue;
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'El ragel la yomken yerga3 fi kelmeto'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -168,11 +246,12 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                   );
                 } else {
                   final gifts = snapshot.data!;
-                  print("This event key is: ${ValueKey("GiftCard0").value}");
+                  print(
+                      "This event key is: ${const ValueKey("GiftCard0").value}");
                   return ListView.builder(
                     itemCount: gifts.length,
                     itemBuilder: (context, index) => GiftCard(
-                      key: Key("GiftCard$index"),
+                      key: ValueKey("GiftCard$index"),
                       gift: gifts[index],
                       isCreator: isCreator,
                       giftRepoRemote: _giftRepoRemote,

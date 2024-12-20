@@ -51,6 +51,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               return EventListTile(
                 eventName: event.name,
                 eventDate: event.date,
+                isPublic: event.isPublic,
                 onTap: () async {
                   await Navigator.push(
                     context,

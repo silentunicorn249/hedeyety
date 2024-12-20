@@ -57,8 +57,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
     if (pickedDate != null) {
       setState(() {
-        eventDate.text =
+        final selectedDate =
             "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+        debugPrint("SelectedDate is: $selectedDate");
+        eventDate.text = selectedDate;
       });
     }
   }
@@ -100,6 +102,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     children: [
                       // Event Name
                       TextFormField(
+                        key: Key("eventNameField"),
                         controller: eventName,
                         decoration: const InputDecoration(
                           labelText: 'Event Name',
@@ -117,6 +120,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
                       // Event Location
                       TextFormField(
+                        key: Key("eventLocationField"),
                         controller: eventLocation,
                         decoration: const InputDecoration(
                           labelText: 'Location',
@@ -128,6 +132,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
                       // Description
                       TextFormField(
+                        key: Key("eventDescField"),
                         controller: eventDesc,
                         decoration: const InputDecoration(
                           labelText: 'Description',
@@ -140,6 +145,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
                       // Event Date
                       TextFormField(
+                        key: Key("eventDateField"),
                         controller: eventDate,
                         readOnly: true,
                         decoration: const InputDecoration(
@@ -163,6 +169,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         children: [
                           // Save Button
                           ElevatedButton.icon(
+                            key: Key("saveEventButt"),
                             onPressed: saveEvent,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).primaryColor,

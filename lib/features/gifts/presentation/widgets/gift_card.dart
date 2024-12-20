@@ -27,6 +27,7 @@ class GiftCard extends StatelessWidget {
     bool isPledged = gift.pledgedId.isNotEmpty;
     bool isPledgedByCurrentUser = gift.pledgedId == currentUserId;
 
+    print("This GiftCard key is: ${(key as ValueKey).value}Butt");
     return GestureDetector(
       onTap: () {
         // Navigate to Gift Details Screen
@@ -67,7 +68,7 @@ class GiftCard extends StatelessWidget {
                   ),
                   if (!isCreator)
                     ElevatedButton.icon(
-                      key: Key("pledgeButt"),
+                      key: Key("${(key as ValueKey).value}Butt"),
                       onPressed: () async {
                         String eventUserId =
                             (await EventRepoRemote().getEvent(gift.eventId))!

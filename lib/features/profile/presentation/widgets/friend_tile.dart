@@ -15,7 +15,6 @@ class FriendTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("This tile button key is  ${key.toString()}Butt");
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(

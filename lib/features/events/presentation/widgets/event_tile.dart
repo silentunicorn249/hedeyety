@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class EventListTile extends StatelessWidget {
   final String eventName;
   final String eventDate;
+  bool isPublic = true;
   final VoidCallback onTap;
 
-  const EventListTile({
+  EventListTile({
     Key? key,
+    this.isPublic = true,
     required this.eventName,
     required this.eventDate,
     required this.onTap,
@@ -31,10 +33,10 @@ class EventListTile extends StatelessWidget {
         ),
         title: Text(
           eventName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isPublic ? Colors.green[700] : Colors.red[600],
           ),
         ),
         subtitle: Padding(

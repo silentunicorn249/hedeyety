@@ -98,7 +98,58 @@ void main() {
     await _goodLogin(tester);
   });
 
-  testWidgets("Add Friend", (WidgetTester tester) async {
+  testWidgets("Create Event", (WidgetTester tester) async {
+    await _startApp(tester);
+
+    // Perform Add Event
+    await tester.tap(find.byKey(const Key("addEventButt")));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('eventNameField')), 'New Test Event');
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('eventLocationField')), 'Test Event Location');
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('eventDescField')), 'Test Event Desc');
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('eventDateField')), '2024-12-22');
+    await tester.pumpAndSettle();
+
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key("saveEventButt")));
+    await tester.pumpAndSettle();
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    final gesture = await tester.createGesture(kind: PointerDeviceKind.touch);
+
+    // Specify the pixel coordinates (x, y)
+    const Offset targetPosition = Offset(150, 300);
+
+    // Move to the position
+    await gesture.moveTo(targetPosition);
+
+    // Simulate the tap
+    await gesture.down(targetPosition);
+    await tester.pump();
+    await gesture.up();
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    //Go to events
+    await tester.tap(find.byIcon(Icons.card_giftcard_sharp));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets("Pledge Friend", (WidgetTester tester) async {
     await _startApp(tester); // Reset app state
     // Ensure HomeScreen is present
     expect(find.byKey(const Key('HomeScreen')), findsOneWidget);
@@ -152,6 +203,25 @@ void main() {
     expect(find.byKey(const Key('MyEventDetailsScreen')), findsOneWidget);
 
     await tester.tap(find.byKey(const Key("GiftCard0")));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key("giftBackButt")));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key("GiftCard0Butt")));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 8));
+
+    // Go to Events
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+
+    // Go to friends
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+
+    //Go to pledged gifts and see the newely added gift
+    await tester.tap(find.byIcon(Icons.card_giftcard_sharp));
     await tester.pumpAndSettle();
     await Future.delayed(const Duration(seconds: 2));
   });

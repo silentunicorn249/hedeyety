@@ -141,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           MaterialButton(
+            key: Key("addEventButt"),
             onPressed: () => addEventModal(context),
             child: const Text("Add Event"),
           ),

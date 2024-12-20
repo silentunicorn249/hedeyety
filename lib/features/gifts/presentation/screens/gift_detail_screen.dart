@@ -89,6 +89,7 @@ class GiftDetailsScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
               child: ElevatedButton(
+                key: Key("giftBackButt"),
                 onPressed: () {
                   Navigator.pop(context);
                 },
