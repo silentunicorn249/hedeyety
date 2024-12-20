@@ -127,12 +127,8 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (BuildContext context) => SingleChildScrollView(
-        child: Container(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: AddEventScreen(),
-        ),
+      builder: (context) => SingleChildScrollView(
+        child: AddEventScreen(event: widget.event),
       ),
     );
   }

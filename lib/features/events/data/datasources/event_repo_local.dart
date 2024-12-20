@@ -63,4 +63,16 @@ class EventRepoLocal implements EventRepository {
     );
     print("Updated isPublic flag for event $eventId to ${isPublic ? 1 : 0}");
   }
+
+  Future<void> updateEventById(EventModel event) async {
+    print("Updating event ${event.id} with data: ${event.toJson()}");
+    await _db.update(
+      EVENT_TABLE_NAME,
+      event.toJson(),
+      where: 'id = ?',
+      whereArgs: [event.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    print("Event ${event.id} updated successfully.");
+  }
 }

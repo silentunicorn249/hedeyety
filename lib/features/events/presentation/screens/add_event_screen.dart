@@ -1,9 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedeyety/features/events/data/datasources/event_repo_local.dart';
-import 'package:hedeyety/features/events/data/models/event_model.dart';
+
+import '../../data/datasources/event_repo_local.dart';
+import '../../data/datasources/event_repo_remote.dart';
+import '../../data/models/event_model.dart';
 
 class AddEventScreen extends StatefulWidget {
+  final EventModel? event; // Optional EventModel for editing
+
+  const AddEventScreen({Key? key, this.event}) : super(key: key);
+
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
 }
@@ -12,10 +18,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
 
-  final TextEditingController eventName = TextEditingController();
-  final TextEditingController eventLocation = TextEditingController();
-  final TextEditingController eventDesc = TextEditingController();
-  final TextEditingController eventDate = TextEditingController();
+  late TextEditingController eventName;
+  late TextEditingController eventLocation;
+  late TextEditingController eventDesc;
+  late TextEditingController eventDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize controllers with pre-filled data if editing
+    eventName = TextEditingController(text: widget.event?.name ?? "");
+    eventLocation = TextEditingController(text: widget.event?.location ?? "");
+    eventDesc = TextEditingController(text: widget.event?.desc ?? "");
+    eventDate = TextEditingController(text: widget.event?.date ?? "");
+  }
 
   void _resetForm() {
     _formKey.currentState?.reset();
@@ -25,48 +42,67 @@ class _AddEventScreenState extends State<AddEventScreen> {
     eventDate.clear();
   }
 
-  void saveEvent() {
+  void saveEvent() async {
     if (_formKey.currentState!.validate()) {
       var userUID = _auth.currentUser!.uid;
 
-      final repo = EventRepoLocal();
-      repo.saveEvent(EventModel(
-        id: userUID + eventName.text,
+      // Create a new event or update the existing one
+      final EventModel event = EventModel(
+        id: widget.event?.id ?? userUID + eventName.text,
         name: eventName.text,
         location: eventLocation.text,
         desc: eventDesc.text,
-        userId: userUID,
+        userId: widget.event?.userId ?? userUID,
         date: eventDate.text,
-        isPublic: false,
-      ));
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Event Saved Successfully!')),
+        isPublic: widget.event?.isPublic ?? false,
       );
 
-      Navigator.pop(context);
+      final localRepo = EventRepoLocal();
+      final remoteRepo = EventRepoRemote();
+
+      // Add or Update Logic
+      if (widget.event == null) {
+        // Add Event
+        await localRepo.saveEvent(event);
+      } else {
+        // Edit Event
+        await localRepo.updateEventById(event);
+        if (event.isPublic) await remoteRepo.saveEvent(event);
+      }
+
+      // Notify success and close modal
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(widget.event == null
+              ? 'Event Added Successfully!'
+              : 'Event Updated Successfully!'),
+        ),
+      );
+      Navigator.pop(context, true);
     }
   }
 
   Future<void> _selectDate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 2)),
+      initialDate: widget.event != null
+          ? DateTime.parse(widget.event!.date)
+          : DateTime.now().add(const Duration(days: 2)),
       firstDate: DateTime.now().add(const Duration(days: 2)),
       lastDate: DateTime.now().add(const Duration(days: 30)),
     );
     if (pickedDate != null) {
       setState(() {
-        final selectedDate =
+        eventDate.text =
             "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-        debugPrint("SelectedDate is: $selectedDate");
-        eventDate.text = selectedDate;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.event != null;
+
     return Padding(
       padding: EdgeInsets.only(
           left: 16,
@@ -79,7 +115,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           children: [
             // Title
             Text(
-              "Create New Event",
+              isEditing ? "Edit Event" : "Create New Event",
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall
@@ -179,24 +215,27 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   borderRadius: BorderRadius.circular(8)),
                             ),
                             icon: const Icon(Icons.save, color: Colors.white),
-                            label: const Text('Save Event',
-                                style: TextStyle(color: Colors.white)),
+                            label: Text(
+                              isEditing ? 'Update Event' : 'Save Event',
+                              style: const TextStyle(color: Colors.white),
+                            ),
                           ),
 
-                          // Reset Button
-                          OutlinedButton.icon(
-                            onPressed: _resetForm,
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Colors.grey),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                          // Reset Button (only in Add mode)
+                          if (!isEditing)
+                            OutlinedButton.icon(
+                              onPressed: _resetForm,
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Colors.grey),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                              icon: const Icon(Icons.clear, color: Colors.grey),
+                              label: const Text('Clear Form',
+                                  style: TextStyle(color: Colors.grey)),
                             ),
-                            icon: const Icon(Icons.clear, color: Colors.grey),
-                            label: const Text('Clear Form',
-                                style: TextStyle(color: Colors.grey)),
-                          ),
                         ],
                       ),
                     ],
