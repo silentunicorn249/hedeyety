@@ -13,9 +13,15 @@ class _HomeStackState extends State<HomeStack> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(),
-    MyEventsScreen(),
-    const PledgedGiftsScreen(),
+    const HomeScreen(
+      key: Key("HomeScreen"),
+    ),
+    const MyEventsScreen(
+      key: Key("MyEventsScreen"),
+    ),
+    const PledgedGiftsScreen(
+      key: Key("PledgedGiftsScreen"),
+    ),
   ];
 
   void _onTabTapped(int index) {

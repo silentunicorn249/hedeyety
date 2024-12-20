@@ -6,6 +6,8 @@ import '../../../events/presentation/widgets/event_tile.dart';
 import 'my_event_details.dart';
 
 class MyEventsScreen extends StatefulWidget {
+  const MyEventsScreen({super.key});
+
   @override
   _MyEventsScreenState createState() => _MyEventsScreenState();
 }

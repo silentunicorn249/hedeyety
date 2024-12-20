@@ -12,6 +12,8 @@ class AddFriendScreen extends StatelessWidget {
   String friendNo = "";
   final userId = FirebaseAuth.instance.currentUser!.uid;
 
+  AddFriendScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,6 +37,7 @@ class AddFriendScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 20, color: Colors.lightBlueAccent),
               ),
               TextField(
+                key: const Key("phoneNoTextField"),
                 autofocus: true,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
@@ -42,6 +45,7 @@ class AddFriendScreen extends StatelessWidget {
                 },
               ),
               MaterialButton(
+                key: const Key("addFriendButton"),
                 color: Colors.lightBlueAccent,
                 onPressed: () async {
                   final friendsProvider =
@@ -65,12 +69,11 @@ class AddFriendScreen extends StatelessWidget {
                     bool succ = await friends_repo.saveFriend(
                         FriendModel(userId: userId, friendId: user.id));
                     friendsProvider.addUser(user);
-                    debugPrint("Added suuccess");
+                    debugPrint("Added success");
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("No user found")));
                   }
-
                   Navigator.pop(context);
                 },
                 child: const Text(

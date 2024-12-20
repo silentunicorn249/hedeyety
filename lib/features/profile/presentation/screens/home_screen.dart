@@ -12,6 +12,8 @@ import '../../../events/presentation/providers/friends_provider.dart';
 import '../widgets/friend_tile.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -89,7 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: AddFriendScreen(),
+          child: AddFriendScreen(
+            key: Key("AddFriendScreen"),
+          ),
         ),
       ),
     );
@@ -111,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
+          key: const Key("profileButt"),
           icon: const Icon(Icons.person),
           onPressed: () {
             Navigator.pushNamed(context, AppRoutes.profile);
@@ -119,6 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Friends List'),
         actions: [
           IconButton(
+            key: const Key("logoutButt"),
             icon: const Icon(Icons.logout_outlined),
             onPressed: () {
               // Logout logic
@@ -128,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        key: const Key("addFriendButt"),
         onPressed: () => addFriendModal(context),
         child: const Icon(Icons.add),
       ),
@@ -155,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     debugPrint("Dodged a bullet ${person.email}");
 
                     return FriendTile(
+                      key: Key("friendTile$index"),
                       person: person,
                       onDelete: () {
                         profileProvider.deleteUser(person.id);

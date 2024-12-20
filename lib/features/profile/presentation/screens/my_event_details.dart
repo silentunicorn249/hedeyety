@@ -168,9 +168,11 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
                   );
                 } else {
                   final gifts = snapshot.data!;
+                  print("This event key is: ${ValueKey("GiftCard0").value}");
                   return ListView.builder(
                     itemCount: gifts.length,
                     itemBuilder: (context, index) => GiftCard(
+                      key: Key("GiftCard$index"),
                       gift: gifts[index],
                       isCreator: isCreator,
                       giftRepoRemote: _giftRepoRemote,

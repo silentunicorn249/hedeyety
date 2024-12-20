@@ -10,7 +10,7 @@ class EventsListScreen extends StatelessWidget {
   final String name;
   final remoteRepo = EventRepoRemote();
 
-  EventsListScreen({required this.userId, required this.name});
+  EventsListScreen({super.key, required this.userId, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class EventsListScreen extends StatelessWidget {
         future: remoteRepo.getEventsByUserId(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
@@ -30,6 +30,7 @@ class EventsListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final event = events[index];
                 return EventListTile(
+                  key: Key("EventListTile$index"),
                   eventName: event.name,
                   eventDate: event.date,
                   onTap: () {
@@ -37,8 +38,8 @@ class EventsListScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            MyEventDetailsScreen(event: event),
+                        builder: (context) => MyEventDetailsScreen(
+                            key: Key("MyEventDetailsScreen"), event: event),
                       ),
                     );
                   },
@@ -46,7 +47,7 @@ class EventsListScreen extends StatelessWidget {
               },
             );
           } else {
-            return Center(child: Text('No events found.'));
+            return const Center(child: Text('No events found.'));
           }
         },
       ),

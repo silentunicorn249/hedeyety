@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class MainButton extends StatelessWidget {
@@ -6,7 +5,11 @@ class MainButton extends StatelessWidget {
   late Color color;
   late VoidCallback clbFn;
 
-  MainButton({required this.clbFn, required this.color, required this.text});
+  MainButton(
+      {super.key,
+      required this.clbFn,
+      required this.color,
+      required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -67,6 +67,7 @@ class GiftCard extends StatelessWidget {
                   ),
                   if (!isCreator)
                     ElevatedButton.icon(
+                      key: Key("pledgeButt"),
                       onPressed: () async {
                         String eventUserId =
                             (await EventRepoRemote().getEvent(gift.eventId))!

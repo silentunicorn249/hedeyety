@@ -8,13 +8,14 @@ class FriendTile extends StatelessWidget {
   final Function onDelete;
 
   const FriendTile({
-    Key? key,
+    required Key key,
     required this.person,
     required this.onDelete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("This tile button key is  ${key.toString()}Butt");
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -25,7 +26,7 @@ class FriendTile extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         leading: ClipOval(
           child: Image.network(
-            "",
+            "https://robohash.org/156.204.121.13.png",
             width: 50,
             height: 50,
             fit: BoxFit.cover,
@@ -60,6 +61,7 @@ class FriendTile extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => EventsListScreen(
+                key: Key("EventsListScreen"),
                 userId: person.id,
                 name: person.name,
               ),

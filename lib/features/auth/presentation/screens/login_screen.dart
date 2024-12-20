@@ -89,13 +89,14 @@ class _LoginScreenState extends State<LoginScreen> {
               Flexible(
                 child: Container(
                   height: 200.0,
-                  child: Image.asset('images/logo.jpg'),
+                  child: Image.asset('images/logo.jpg', key: const Key('logo')),
                 ),
               ),
               const SizedBox(
                 height: 48.0,
               ),
               MainTextInput(
+                key: Key("emailField"),
                 hintText: "Enter your email",
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (value) => email = value,
@@ -104,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8.0,
               ),
               MainTextInput(
+                key: const Key('passwordField'),
                 hintText: "Enter your password",
                 isObscure: true,
                 onChanged: (value) => password = value,
@@ -112,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24.0,
               ),
               MainButton(
+                key: const Key('loginButton'),
                 clbFn: handleLogin,
                 color: Colors.lightBlueAccent,
                 text: "Log in",
