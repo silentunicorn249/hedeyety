@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedeyety/features/events/presentation/screens/add_event_screen.dart';
 import 'package:hedeyety/features/gifts/data/datasources/gift_repo_remote.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../events/data/datasources/event_repo_local.dart';
 import '../../../events/data/datasources/event_repo_remote.dart';
@@ -39,6 +43,26 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
     );
 
     if (newGiftData != null) {
+      print(newGiftData);
+
+      // Retrieve the image path from the newGiftData
+      final imagePath = newGiftData["imagePath"];
+      String? uploadedImageUrl;
+
+      if (imagePath != null && imagePath.isNotEmpty) {
+        // Upload the image to Imgur and get the URL
+        uploadedImageUrl = await _uploadImageToImgur(File(imagePath));
+      }
+
+      if (uploadedImageUrl == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed to upload image. Please try again."),
+          ),
+        );
+        return;
+      }
+
       final newGift = GiftModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: newGiftData["name"],
@@ -47,10 +71,49 @@ class _MyEventDetailsScreenState extends State<MyEventDetailsScreen> {
         price: newGiftData["price"],
         pledgedId: "",
         eventId: newGiftData["eventId"],
+        imageUrl: uploadedImageUrl,
       );
 
+      // Save the gift remotely
       await _giftRepoRemote.saveGift(newGift);
+
+      // Reload the gifts
       _reloadGifts();
+    }
+  }
+
+  Future<String?> _uploadImageToImgur(File imageFile) async {
+    const String clientId =
+        "e97fec3580a41c8"; // Replace with your Imgur Client ID
+
+    try {
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse("https://api.imgur.com/3/image"),
+      );
+
+      // Add the image file to the request
+      request.files
+          .add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+      // Add the authorization header with the client ID
+      request.headers['Authorization'] = 'Client-ID $clientId';
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final jsonData = jsonDecode(responseData);
+
+        // Extract the image URL from the response
+        return jsonData['data']['link'];
+      } else {
+        print("Failed to upload image. Status code: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("Error uploading image: $e");
+      return null;
     }
   }
 

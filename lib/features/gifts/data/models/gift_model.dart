@@ -9,6 +9,7 @@ class GiftModel extends GiftEntity {
     required super.price,
     required super.pledgedId,
     required super.eventId,
+    required super.imageUrl,
   });
 
   @override
@@ -19,7 +20,8 @@ class GiftModel extends GiftEntity {
         'description': description,
         'price': price,
         'pledgedId': pledgedId,
-        'eventId': eventId, // Store as 0 or 1 in SQLite
+        'eventId': eventId,
+        'imageUrl': imageUrl,
       };
 
   factory GiftModel.fromJson(Map<String, dynamic> json) => GiftModel(
@@ -29,6 +31,7 @@ class GiftModel extends GiftEntity {
         description: json['description'],
         price: json['price'],
         pledgedId: json['pledgedId'],
-        eventId: json['eventId'], // Convert 0 or 1 to bool
+        eventId: json['eventId'],
+        imageUrl: json['imageUrl'],
       );
 }
