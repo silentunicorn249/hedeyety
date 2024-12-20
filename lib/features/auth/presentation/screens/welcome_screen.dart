@@ -16,11 +16,11 @@ class WelcomeScreen extends StatelessWidget {
             Row(
               children: <Widget>[
                 Container(
-                  child: Image.asset('images/logo.jpg'),
-                  height: 80,
+                  child: Image.asset('images/logo.png'),
+                  height: 110,
                 ),
                 const SizedBox(
-                  width: 20,
+                  width: 1,
                 ),
                 const Text(
                   "Hedeyety",
