@@ -25,7 +25,7 @@ class FriendTile extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         leading: ClipOval(
           child: Image.network(
-            "https://robohash.org/156.204.121.13.png",
+            "https://robohash.org/${person.id}",
             width: 50,
             height: 50,
             fit: BoxFit.cover,

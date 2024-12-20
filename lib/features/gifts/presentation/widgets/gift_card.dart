@@ -15,7 +15,7 @@ class GiftCard extends StatelessWidget {
   final VoidCallback onGiftUpdated;
 
   GiftCard({
-    super.key,
+    required super.key,
     required this.gift,
     required this.isCreator,
     required this.giftRepoRemote,

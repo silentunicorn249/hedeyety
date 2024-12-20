@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hedeyety/features/auth/data/datasources/user_repo_local.dart';
@@ -63,6 +62,8 @@ void main() {
 
     await Future.delayed(const Duration(seconds: 2));
 
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
     // Verify that the SignInPage is no longer visible, indicating successful navigation
     expect(find.byKey(const Key('loginButton')), findsNothing);
 
@@ -87,8 +88,11 @@ void main() {
     // Tap the sign-in button
     await tester.ensureVisible(find.byKey(const Key('loginButton')));
     await tester.tap(find.byKey(const Key('loginButton')));
-    await tester
-        .pumpAndSettle(); // Ensure button is tapped and response is processed
+    await Future.delayed(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+
+    await Future.delayed(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     // Verify that the SignInPage is still visible (incorrect password scenario)
     expect(find.byKey(const Key('loginButton')), findsOneWidget);
@@ -117,35 +121,47 @@ void main() {
         find.byKey(const Key('eventDescField')), 'Test Event Desc');
     await tester.pumpAndSettle();
 
-    await tester.enterText(
-        find.byKey(const Key('eventDateField')), '2024-12-22');
-    await tester.pumpAndSettle();
-
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
+
+    // Trigger the Date Picker
+    await tester.tap(find.byKey(const Key('eventDateField')));
+    await tester.pumpAndSettle();
+
+    // Go to next month
+    await tester.tap(find.byTooltip('Next month'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('24'));
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
 
     await tester.tap(find.byKey(const Key("saveEventButt")));
     await tester.pumpAndSettle();
 
     await Future.delayed(const Duration(seconds: 1));
-
-    final gesture = await tester.createGesture(kind: PointerDeviceKind.touch);
-
-    // Specify the pixel coordinates (x, y)
-    const Offset targetPosition = Offset(150, 300);
-
-    // Move to the position
-    await gesture.moveTo(targetPosition);
-
-    // Simulate the tap
-    await gesture.down(targetPosition);
-    await tester.pump();
-    await gesture.up();
-    await tester.pump();
     await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
 
     //Go to events
-    await tester.tap(find.byIcon(Icons.card_giftcard_sharp));
+    await tester.tap(find.byIcon(Icons.event));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
+  });
+
+  testWidgets("Show profile", (WidgetTester tester) async {
+    await _startApp(tester); // Reset app state
+
+    await tester.tap(find.byIcon(Icons.person));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
+
+    await tester.tap(find.byKey(const Key("goBackButt")));
     await tester.pumpAndSettle();
   });
 
@@ -171,23 +187,20 @@ void main() {
 
     print("Pressed and waiting to add");
     await Future.delayed(const Duration(seconds: 4));
-
-    final gesture = await tester.createGesture(kind: PointerDeviceKind.touch);
-
-    // Specify the pixel coordinates (x, y)
-    const Offset targetPosition = Offset(150, 300);
-
-    // Move to the position
-    await gesture.moveTo(targetPosition);
-
-    // Simulate the tap
-    await gesture.down(targetPosition);
-    await tester.pump();
-    await gesture.up();
-    await tester.pump();
     await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
 
     print("Starting pledging");
+
+    //Go to pledged gifts and see the current added gift
+    await tester.tap(find.byIcon(Icons.card_giftcard_sharp));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 2));
+
+    //Go back to homeScreen
+    await tester.tap(find.byIcon(Icons.home));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 2));
 
     expect(find.byKey(const Key('friendTile0')), findsOneWidget);
     await tester.tap(find.byKey(const Key("friendTile0")));
@@ -204,13 +217,18 @@ void main() {
 
     await tester.tap(find.byKey(const Key("GiftCard0")));
     await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 2));
 
     await tester.tap(find.byKey(const Key("giftBackButt")));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key("GiftCard0Butt")));
     await tester.pumpAndSettle();
-    await Future.delayed(const Duration(seconds: 8));
+    await Future.delayed(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
 
     // Go to Events
     await tester.tap(find.byIcon(Icons.arrow_back));

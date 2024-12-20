@@ -49,6 +49,7 @@ class _PledgedGiftsScreenState extends State<PledgedGiftsScreen> {
               itemBuilder: (context, index) {
                 final gift = pledgedGifts[index];
                 return GiftCard(
+                  key: ValueKey("GiftCard$index"),
                   gift: gift,
                   isCreator: false,
                   giftRepoRemote: _giftRepoRemote,

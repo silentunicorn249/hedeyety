@@ -108,6 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     // Edit Profile Button
                     ElevatedButton(
+                      key: const Key("goBackButt"),
                       onPressed: () {
                         Navigator.pop(context);
                       },

@@ -40,6 +40,19 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+
+    // Modify the APK name for debug and release builds
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if (variant.buildType.name == "debug") {
+                // Custom APK name for debug build
+                output.outputFileName = "custom_integration_test_apk_name-debug.apk"
+            } else if (variant.buildType.name == "release") {
+                // Custom APK name for release build
+                output.outputFileName = "custom_integration_test_apk_name-release.apk"
+            }
+        }
+    }
 }
 
 flutter {
